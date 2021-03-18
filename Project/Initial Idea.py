@@ -27,7 +27,12 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = y_ref
         self.speed_x = speed_x
         self.speed_y = speed_y
+        self.old_x = self.rect.x
+        self.old_y = self.rect.y
     #End Procedure
+    def update(self):
+        self.old_x = self.rect.x
+        self.old_y = self.rect.y
 #End Class
 class Monster(pygame.sprite.Sprite):
     # Define the constructor for invader
@@ -193,6 +198,7 @@ selector_sprites_group = pygame.sprite.Group()
 map_sprites_group = pygame.sprite.Group()
 draw_sprites_group = pygame.sprite.Group()
 player_sprites_group = pygame.sprite.Group()
+brick_group = pygame.sprite.Group()
 #top selector
 selector_top = Selector_Top(0, 0, 0, 0)
 all_sprites_group.add(selector_top)
@@ -325,12 +331,12 @@ while map_draw == True:
             #Next
         #Next
         if is_player_there == False:
-            player = Player(selector_left.rect.x, selector_top.rect.y, 0, 0)
+            player = Player(selector_left.rect.x + 5, selector_top.rect.y + 5, 0, 0)
             draw_sprites_group.add(player)
             all_sprites_group.add(player)
             map[selector_top.pos_x][selector_top.pos_y] = 5
       if event.key == pygame.K_6:
-        monster = Monster(selector_left.rect.x, selector_top.rect.y)
+        monster = Monster(selector_left.rect.x + 5, selector_top.rect.y + 5)
         draw_sprites_group.add(monster)
         all_sprites_group.add(monster)
         map[selector_top.pos_x][selector_top.pos_y] = 6
@@ -409,6 +415,7 @@ for y in range(12):
             brick = Brick(x*40, y*40)
             map_sprites_group.add(brick)
             all_sprites_group.add(brick)
+            brick_group.add(brick)
         #End If
     #Next
 #Next
@@ -442,7 +449,7 @@ for y in range(12):
 for y in range(12):
     for x in range(16):
         if map[x][y] == 5:
-            player = Player(x*40, y *40, 0, 0)
+            player = Player(x*40 + 5, y *40 + 5, 0, 0)
             player_sprites_group.add(player)
             all_sprites_group.add(player)
         #End If
@@ -451,7 +458,7 @@ for y in range(12):
 for y in range(12):
     for x in range(16):
         if map[x][y] == 6:
-            monster = Monster(x*40, y *40)
+            monster = Monster(x*40 + 5, y *40 + 5)
             map_sprites_group.add(monster)
             all_sprites_group.add(monster)
         #End If
@@ -466,6 +473,12 @@ while in_game == True:
         #End If
     #Next event
     # -- Game logic goes after this comment
+    player_brick_hit_list = pygame.sprite.spritecollide(player, brick_group, False)
+    for foo in player_brick_hit_list:
+        player.rect.x = player.old_x
+        player.rect.y = player.old_y
+        player.speed_x = 0
+        player.speed_y = 0
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
         player.speed_y = -2

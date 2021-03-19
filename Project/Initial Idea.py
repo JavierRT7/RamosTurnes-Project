@@ -87,11 +87,6 @@ class Door(pygame.sprite.Sprite):
         self.rect.y = y_ref
         self.state = state
     #End Procedure
-    def update(self):
-        if self.state == True:
-            self.image = pygame.image.load('door.png')
-        if self.state == False:
-            self.image = pygame.image.load('door2.png')
 #End Class
 class Selector_Left(pygame.sprite.Sprite):
     # Define the constructor for invader
@@ -493,13 +488,13 @@ while in_game == True:
     if keys[pygame.K_DOWN]:
         player.speed_y = 2
         player.rect.y = player.rect.y + player.speed_y
-        if player.rect.y > 440:
+        if player.rect.y > 450:
             player.rect.y = player.rect.y - player.speed_y
     #End If
     if keys[pygame.K_RIGHT]:
         player.speed_x = 2
         player.rect.x = player.rect.x + player.speed_x
-        if player.rect.x > 600:
+        if player.rect.x > 610:
             player.rect.x = player.rect.x - player.speed_x
     #End If
     if keys[pygame.K_LEFT]:
@@ -529,11 +524,8 @@ while in_game == True:
             player.speed_y = 0
             keys = pygame.key.get_pressed()
             if keys[pygame.K_1]:
-                if door.state == True:
-                    door.state = False
-                else:
-                    door.state = True
-                #End If
+                door.state = False
+                door.image = pygame.image.load('opendoor2.png')
             #End If
     #End If
     all_sprites_group.update()
@@ -543,7 +535,7 @@ while in_game == True:
     map_sprites_group.draw(screen)
     player_sprites_group.draw(screen)
     font = pygame.font.SysFont('ComicSans', 30, True, False)
-    text = font.render('Press 1 to open/close a door', True, WHITE)
+    text = font.render('Press 1 to open a door', True, WHITE)
     screen.blit(text, [650, 10])
     # -- Draw here
     # -- flip display to reveal new position of objects

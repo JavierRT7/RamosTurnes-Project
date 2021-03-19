@@ -76,7 +76,7 @@ class Brick(pygame.sprite.Sprite):
 #End Class
 class Door(pygame.sprite.Sprite):
     # Define the constructor for invader
-    def __init__(self, x_ref, y_ref):
+    def __init__(self, x_ref, y_ref, state):
         # Call the sprite constructor
         super().__init__()
         # Create a sprite and fill it with colour
@@ -85,7 +85,13 @@ class Door(pygame.sprite.Sprite):
         # Set the position of the player attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
+        self.state = state
     #End Procedure
+    def update(self):
+        if self.state == True:
+            self.image = pygame.image.load('door.png')
+        if self.state == False:
+            self.image = pygame.image.load('door2.png')
 #End Class
 class Selector_Left(pygame.sprite.Sprite):
     # Define the constructor for invader
@@ -199,6 +205,8 @@ map_sprites_group = pygame.sprite.Group()
 draw_sprites_group = pygame.sprite.Group()
 player_sprites_group = pygame.sprite.Group()
 brick_group = pygame.sprite.Group()
+window_group = pygame.sprite.Group()
+door_group = pygame.sprite.Group()
 #top selector
 selector_top = Selector_Top(0, 0, 0, 0)
 all_sprites_group.add(selector_top)
@@ -313,7 +321,7 @@ while map_draw == True:
         all_sprites_group.add(window)
         map[selector_top.pos_x][selector_top.pos_y] = 2
       if event.key == pygame.K_3:
-        door = Door(selector_left.rect.x, selector_top.rect.y)
+        door = Door(selector_left.rect.x, selector_top.rect.y, True)
         draw_sprites_group.add(door)
         all_sprites_group.add(door)
         map[selector_top.pos_x][selector_top.pos_y] = 3
@@ -425,15 +433,17 @@ for y in range(12):
             window = Window(x*40, y *40)
             map_sprites_group.add(window)
             all_sprites_group.add(window)
+            window_group.add(window)
         #End If
     #Next
 #Next
 for y in range(12):
     for x in range(16):
         if map[x][y] == 3:
-            door = Door(x*40, y *40)
+            door = Door(x*40, y *40, True)
             map_sprites_group.add(door)
             all_sprites_group.add(door)
+            door_group.add(door)
         #End If
     #Next
 #Next
@@ -473,12 +483,6 @@ while in_game == True:
         #End If
     #Next event
     # -- Game logic goes after this comment
-    player_brick_hit_list = pygame.sprite.spritecollide(player, brick_group, False)
-    for foo in player_brick_hit_list:
-        player.rect.x = player.old_x
-        player.rect.y = player.old_y
-        player.speed_x = 0
-        player.speed_y = 0
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
         player.speed_y = -2
@@ -504,12 +508,43 @@ while in_game == True:
         if player.rect.x < 0:
             player.rect.x = player.rect.x - player.speed_x
     #End If
+    player_brick_hit_list = pygame.sprite.spritecollide(player, brick_group, False)
+    for foo in player_brick_hit_list:
+        player.rect.x = player.old_x
+        player.rect.y = player.old_y
+        player.speed_x = 0
+        player.speed_y = 0
+    player_window_hit_list = pygame.sprite.spritecollide(player, window_group, False)
+    for foo in player_window_hit_list:
+        player.rect.x = player.old_x
+        player.rect.y = player.old_y
+        player.speed_x = 0
+        player.speed_y = 0
+    if door.state == True:
+        player_door_hit_list = pygame.sprite.spritecollide(player, door_group, False)
+        for foo in player_door_hit_list:
+            player.rect.x = player.old_x
+            player.rect.y = player.old_y
+            player.speed_x = 0
+            player.speed_y = 0
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_1]:
+                if door.state == True:
+                    door.state = False
+                else:
+                    door.state = True
+                #End If
+            #End If
+    #End If
     all_sprites_group.update()
     # -- Screen background is BLACK
     screen.fill(WHITE)
     pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
     map_sprites_group.draw(screen)
     player_sprites_group.draw(screen)
+    font = pygame.font.SysFont('ComicSans', 30, True, False)
+    text = font.render('Press 1 to open/close a door', True, WHITE)
+    screen.blit(text, [650, 10])
     # -- Draw here
     # -- flip display to reveal new position of objects
     pygame.display.flip()

@@ -87,6 +87,21 @@ class Door(pygame.sprite.Sprite):
         self.rect.y = y_ref
         self.state = state
     #End Procedure
+    def update(self):
+        player_door_hit_list = pygame.sprite.spritecollide(self, player_sprites_group, False)
+        for foo in player_door_hit_list:
+            if self.state == True:
+                player.rect.x = player.old_x
+                player.rect.y = player.old_y
+                player.speed_x = 0
+                player.speed_y = 0
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_1]:
+                    self.state = False
+                    self.image = pygame.image.load('opendoor2.png')
+                #End If
+            #End If
+        #Next
 #End Class
 class Selector_Left(pygame.sprite.Sprite):
     # Define the constructor for invader
@@ -515,19 +530,6 @@ while in_game == True:
         player.rect.y = player.old_y
         player.speed_x = 0
         player.speed_y = 0
-    if door.state == True:
-        player_door_hit_list = pygame.sprite.spritecollide(player, door_group, False)
-        for foo in player_door_hit_list:
-            player.rect.x = player.old_x
-            player.rect.y = player.old_y
-            player.speed_x = 0
-            player.speed_y = 0
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_1]:
-                door.state = False
-                door.image = pygame.image.load('opendoor2.png')
-            #End If
-    #End If
     all_sprites_group.update()
     # -- Screen background is BLACK
     screen.fill(WHITE)

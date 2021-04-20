@@ -20,7 +20,7 @@ class Player(pygame.sprite.Sprite):
         # Call the sprite constructor
         super().__init__()
         # Create a sprite and fill it with colour
-        self.image = pygame.image.load('player3.png')
+        self.image = pygame.image.load('player4.png')
         self.rect = self.image.get_rect()
         # Set the position of the player attributes
         self.rect.x = x_ref
@@ -40,7 +40,7 @@ class Monster(pygame.sprite.Sprite):
         # Call the sprite constructor
         super().__init__()
         # Create a sprite and fill it with colour
-        self.image = pygame.image.load('monster.jpg')
+        self.image = pygame.image.load('monster.png')
         self.rect = self.image.get_rect()
         # Set the position of the player attributes
         self.rect.x = x_ref

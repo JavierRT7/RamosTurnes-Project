@@ -36,7 +36,7 @@ class Player(pygame.sprite.Sprite):
 #End Class
 class Monster(pygame.sprite.Sprite):
     # Define the constructor for invader
-    def __init__(self, x_ref, y_ref):
+    def __init__(self, x_ref, y_ref, speed_x, speed_y, old_x, old_y):
         # Call the sprite constructor
         super().__init__()
         # Create a sprite and fill it with colour
@@ -45,7 +45,18 @@ class Monster(pygame.sprite.Sprite):
         # Set the position of the player attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
+        self.speed_x = speed_x
+        self.speed_y = speed_y
+        self.old_x = self.rect.x
+        self.old_y = self.rect.y
     #End Procedure
+    def update(self):
+        self.old_x = self.rect.x
+        self.old_y = self.rect.y
+        self.rect.x = self.rect.x + self.speed_x
+        self.rect.y = self.rect.y + self.speed_y
+        monster_brick_hit_list = pygame.sprite.spritecollide(self, brick_group, False)
+        monster_window_hit_list = pygame.sprite.spritecollide(self, window_group, False)
 #End Class
 class Map_Block(pygame.sprite.Sprite):
     # Define the constructor for invader

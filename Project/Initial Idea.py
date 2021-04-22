@@ -365,7 +365,7 @@ while map_draw == True:
             all_sprites_group.add(player)
             map[selector_top.pos_x][selector_top.pos_y] = 5
       if event.key == pygame.K_6:
-        monster = Monster(selector_left.rect.x + 5, selector_top.rect.y + 5)
+        monster = Monster(selector_left.rect.x + 5, selector_top.rect.y + 5, 0, 0, selector_left.rect.x + 5, selector_top.rect.y + 5)
         draw_sprites_group.add(monster)
         all_sprites_group.add(monster)
         map[selector_top.pos_x][selector_top.pos_y] = 6
@@ -489,7 +489,7 @@ for y in range(12):
 for y in range(12):
     for x in range(16):
         if map[x][y] == 6:
-            monster = Monster(x*40 + 5, y *40 + 5)
+            monster = Monster(x*40 + 5, y *40 + 5, 2, 0, x*40 + 5, y*40 + 5)
             map_sprites_group.add(monster)
             all_sprites_group.add(monster)
         #End If

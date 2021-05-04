@@ -12,7 +12,7 @@ pygame.init()
 size = (640,480)
 screen = pygame.display.set_mode(size)
 # -- Title of new window/screen
-pygame.display.set_caption("My Window")
+pygame.display.set_caption("My Project")
 #Classes
 class Player(pygame.sprite.Sprite):
     # Define the constructor for invader

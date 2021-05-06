@@ -1,4 +1,5 @@
 import pygame
+import random
 # -- Global Constants
 # -- Colours
 BLACK = (0,0,0)
@@ -36,7 +37,7 @@ class Player(pygame.sprite.Sprite):
 #End Class
 class Monster(pygame.sprite.Sprite):
     # Define the constructor for invader
-    def __init__(self, x_ref, y_ref, speed_x, speed_y, old_x, old_y):
+    def __init__(self, x_ref, y_ref, old_x, old_y):
         # Call the sprite constructor
         super().__init__()
         # Create a sprite and fill it with colour
@@ -45,18 +46,80 @@ class Monster(pygame.sprite.Sprite):
         # Set the position of the player attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
-        self.speed_x = speed_x
-        self.speed_y = speed_y
+        self.speed_x = random.randint(-3, 3)
+        self.speed_y = random.randint(-3, 3)
         self.old_x = self.rect.x
         self.old_y = self.rect.y
     #End Procedure
     def update(self):
-        self.old_x = self.rect.x
-        self.old_y = self.rect.y
         self.rect.x = self.rect.x + self.speed_x
         self.rect.y = self.rect.y + self.speed_y
         monster_brick_hit_list = pygame.sprite.spritecollide(self, brick_group, False)
         monster_window_hit_list = pygame.sprite.spritecollide(self, window_group, False)
+        monster_door_hit_list = pygame.sprite.spritecollide(self, closed_door_group, False)
+        for foo in monster_brick_hit_list:
+            self.speed_x = 0
+            self.speed_y = 0
+            self.rect.x = self.old_x
+            self.rect.y = self.old_y
+            self.speed_x = random.randint(-3, 3)
+            self.speed_y = random.randint(-3, 3)
+        for foo in monster_window_hit_list:
+            self.speed_x = 0
+            self.speed_y = 0
+            self.rect.x = self.old_x
+            self.rect.y = self.old_y
+            self.speed_x = random.randint(-3, 3)
+            self.speed_y = random.randint(-3, 3)
+        for foo in monster_door_hit_list:
+            self.speed_x = 0
+            self.speed_y = 0
+            self.rect.x = self.old_x
+            self.rect.y = self.old_y
+            self.speed_x = random.randint(-3, 3)
+            self.speed_y = random.randint(-3, 3)
+        if self.rect.x > 610:
+            self.speed_x = 0
+            self.speed_y = 0
+            self.rect.x = self.old_x
+            self.rect.y = self.old_y
+            self.speed_x = random.randint(-3, 3)
+            self.speed_y = random.randint(-3, 3)
+        if self.rect.x < 0:
+            self.speed_x = 0
+            self.speed_y = 0
+            self.rect.x = self.old_x
+            self.rect.y = self.old_y
+            self.speed_x = random.randint(-3, 3)
+            self.speed_y = random.randint(-3, 3)
+        if self.rect.y > 450:
+            self.speed_x = 0
+            self.speed_y = 0
+            self.rect.x = self.old_x
+            self.rect.y = self.old_y
+            self.speed_x = random.randint(-3, 3)
+            self.speed_y = random.randint(-3, 3)
+        if self.rect.y < 0:
+            self.speed_x = 0
+            self.speed_y = 0
+            self.rect.x = self.old_x
+            self.rect.y = self.old_y
+            self.speed_x = random.randint(-3, 3)
+            self.speed_y = random.randint(-3, 3)
+        monster_group.remove(self)
+        monster_monster_hit_list = pygame.sprite.spritecollide(self, monster_group, False)
+        for foo in monster_monster_hit_list:
+            self.speed_x = random.randint(-3, 3)
+            self.speed_y = random.randint(-3, 3)
+            self.rect.x = self.old_x
+            self.rect.y = self.old_y
+            print("y")
+        monster_group.add(self)
+        if self.speed_x == 0 and self.speed_y == 0:
+            self.speed_x = random.randint(-3, 3)
+            self.speed_y = random.randint(-3, 3)
+        self.old_x = self.rect.x
+        self.old_y = self.rect.y
 #End Class
 class Map_Block(pygame.sprite.Sprite):
     # Define the constructor for invader
@@ -110,6 +173,8 @@ class Door(pygame.sprite.Sprite):
                 if keys[pygame.K_1]:
                     self.state = False
                     self.image = pygame.image.load('opendoor2.png')
+                    closed_door_group.remove(self)
+                    open_door_group.add(self)
                 #End If
             #End If
         #Next
@@ -228,6 +293,9 @@ player_sprites_group = pygame.sprite.Group()
 brick_group = pygame.sprite.Group()
 window_group = pygame.sprite.Group()
 door_group = pygame.sprite.Group()
+open_door_group = pygame.sprite.Group()
+closed_door_group = pygame.sprite.Group()
+monster_group = pygame.sprite.Group()
 #top selector
 selector_top = Selector_Top(0, 0, 0, 0)
 all_sprites_group.add(selector_top)
@@ -365,7 +433,7 @@ while map_draw == True:
             all_sprites_group.add(player)
             map[selector_top.pos_x][selector_top.pos_y] = 5
       if event.key == pygame.K_6:
-        monster = Monster(selector_left.rect.x + 5, selector_top.rect.y + 5, 0, 0, selector_left.rect.x + 5, selector_top.rect.y + 5)
+        monster = Monster(selector_left.rect.x + 5, selector_top.rect.y + 5, selector_left.rect.x + 5, selector_top.rect.y + 5)
         draw_sprites_group.add(monster)
         all_sprites_group.add(monster)
         map[selector_top.pos_x][selector_top.pos_y] = 6
@@ -465,6 +533,7 @@ for y in range(12):
             map_sprites_group.add(door)
             all_sprites_group.add(door)
             door_group.add(door)
+            closed_door_group.add(door)
         #End If
     #Next
 #Next
@@ -489,9 +558,10 @@ for y in range(12):
 for y in range(12):
     for x in range(16):
         if map[x][y] == 6:
-            monster = Monster(x*40 + 5, y *40 + 5, 2, 0, x*40 + 5, y*40 + 5)
+            monster = Monster(x*40 + 5, y *40 + 5, x*40 + 5, y*40 + 5)
             map_sprites_group.add(monster)
             all_sprites_group.add(monster)
+            monster_group.add(monster)
         #End If
     #Next
 #Next

@@ -106,15 +106,14 @@ class Monster(pygame.sprite.Sprite):
             self.rect.y = self.old_y
             self.speed_x = random.randint(-3, 3)
             self.speed_y = random.randint(-3, 3)
-        monster_group.remove(self)
-        monster_monster_hit_list = pygame.sprite.spritecollide(self, monster_group, False)
-        for foo in monster_monster_hit_list:
-            self.speed_x = random.randint(-3, 3)
-            self.speed_y = random.randint(-3, 3)
-            self.rect.x = self.old_x
-            self.rect.y = self.old_y
-            print("y")
-        monster_group.add(self)
+        #monster_group.remove(self)
+        #monster_monster_hit_list = pygame.sprite.spritecollide(self, monster_group, False)
+        #for foo in monster_monster_hit_list:
+            #self.speed_x = random.randint(-3, 3)
+            #self.speed_y = random.randint(-3, 3)
+            #self.rect.x = self.old_x
+            #self.rect.y = self.old_y
+        #monster_group.add(self)
         if self.speed_x == 0 and self.speed_y == 0:
             self.speed_x = random.randint(-3, 3)
             self.speed_y = random.randint(-3, 3)

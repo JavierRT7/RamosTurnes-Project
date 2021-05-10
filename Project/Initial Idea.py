@@ -316,6 +316,8 @@ door_group = pygame.sprite.Group()
 open_door_group = pygame.sprite.Group()
 closed_door_group = pygame.sprite.Group()
 monster_group = pygame.sprite.Group()
+apple_group = pygame.sprite.Group()
+apple_number = 0
 #top selector
 selector_top = Selector_Top(0, 0, 0, 0)
 all_sprites_group.add(selector_top)
@@ -562,6 +564,7 @@ for y in range(12):
         if map[x][y] == 4:
             apple = Apple(x*40, y *40)
             map_sprites_group.add(apple)
+            apple_group.add(apple)
             all_sprites_group.add(apple)
         #End If
     #Next
@@ -631,6 +634,9 @@ while in_game == True:
         player.rect.y = player.old_y
         player.speed_x = 0
         player.speed_y = 0
+    player_apple_hit_list = pygame.sprite.groupcollide(player_sprites_group, apple_group, dokilla=False, dokillb=True, collided=None)
+    for foo in player_apple_hit_list:
+        player.apples = player.apples + 1
     all_sprites_group.update()
     # -- Screen background is BLACK
     screen.fill(WHITE)
@@ -642,6 +648,8 @@ while in_game == True:
     screen.blit(text, [650, 10])
     text = font.render('Health: ' + str(player.health), True, WHITE)
     screen.blit(text, [650, 40])
+    text = font.render('Apples: ' + str(player.apples), True, WHITE)
+    screen.blit(text, [650, 70])
     # -- Draw here
     # -- flip display to reveal new position of objects
     pygame.display.flip()

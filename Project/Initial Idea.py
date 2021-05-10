@@ -97,16 +97,16 @@ class Monster(pygame.sprite.Sprite):
             self.rect.y = self.old_y
             self.speed_x = random.randint(-2, 2)
             self.speed_y = random.randint(-2, 2)
-        #for foo in monster_player_hit_list:
-            #player.health = player.health - 1
-            #self.rect.x = self.old_x
-            #self.rect.y = self.old_y
-            #self.speed_x = random.randint(-2, 2)
-            #self.speed_y = random.randint(-2, 2)
-            #player.speed_x = 0
-            #player.speed_y = 0
-            #player.rect.x = player.old_x
-            #player.rect.y = player.old_y
+        for foo in monster_player_hit_list:
+            player.health = player.health - 1
+            self.rect.x = self.old_x
+            self.rect.y = self.old_y
+            self.speed_x = random.randint(-2, 2)
+            self.speed_y = random.randint(-2, 2)
+            player.speed_x = 0
+            player.speed_y = 0
+            player.rect.x = player.old_x
+            player.rect.y = player.old_y
         if self.rect.x > 610:
             self.speed_x = 0
             self.speed_y = 0

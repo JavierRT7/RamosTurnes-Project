@@ -288,6 +288,8 @@ intro = True
 map_draw = False
 in_game = False
 endgame = False
+winner_of_own_map = False
+loser_of_own_map = False
 is_player_there = False
 map = [[0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0],
@@ -318,26 +320,12 @@ closed_door_group = pygame.sprite.Group()
 monster_group = pygame.sprite.Group()
 apple_group = pygame.sprite.Group()
 apple_number = 0
-#top selector
-selector_top = Selector_Top(0, 0, 0, 0)
-all_sprites_group.add(selector_top)
-selector_sprites_group.add(selector_top)
-#left selector
-selector_left = Selector_Left(0, 0)
-all_sprites_group.add(selector_left)
-selector_sprites_group.add(selector_left)
-#right selector
-selector_right = Selector_Right(35, 0)
-all_sprites_group.add(selector_right)
-selector_sprites_group.add(selector_right)
-#bottom selector
-selector_bottom = Selector_Bottom(0, 35)
-all_sprites_group.add(selector_bottom)
-selector_sprites_group.add(selector_bottom)
 # -- Manages how fast screen refreshes
 clock = pygame.time.Clock()
 ### -- Game Loop
 while intro == True:
+    for item in all_sprites_group:
+        item.kill()
     # -- User input and controls
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -364,6 +352,22 @@ while intro == True:
     # - The clock ticks over
     clock.tick(60)
 #End While - End of game loop
+#top selector
+selector_top = Selector_Top(0, 0, 0, 0)
+all_sprites_group.add(selector_top)
+selector_sprites_group.add(selector_top)
+#left selector
+selector_left = Selector_Left(0, 0)
+all_sprites_group.add(selector_left)
+selector_sprites_group.add(selector_left)
+#right selector
+selector_right = Selector_Right(35, 0)
+all_sprites_group.add(selector_right)
+selector_sprites_group.add(selector_right)
+#bottom selector
+selector_bottom = Selector_Bottom(0, 35)
+all_sprites_group.add(selector_bottom)
+selector_sprites_group.add(selector_bottom)
 while map_draw == True:
   # -- User input and controls
   size = (1000, 480)
@@ -566,6 +570,7 @@ for y in range(12):
             map_sprites_group.add(apple)
             apple_group.add(apple)
             all_sprites_group.add(apple)
+            apple_number = apple_number + 1
         #End If
     #Next
 #Next
@@ -638,6 +643,12 @@ while in_game == True:
     for foo in player_apple_hit_list:
         player.apples = player.apples + 1
     all_sprites_group.update()
+    if player.apples == apple_number:
+        in_game = False
+        winner_of_own_map = True
+    if player.health < 1:
+        in_game = False
+        loser_of_own_map = True
     # -- Screen background is BLACK
     screen.fill(WHITE)
     pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
@@ -656,5 +667,17 @@ while in_game == True:
     # - The clock ticks over
     clock.tick(60)
 #End While - End of game loop
+while winner_of_own_map == True:
+    # -- User input and controls
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            winner_of_own_map = False
+            endgame = True
+        elif event.type == pygame.KEYDOWN: # - a key is down
+            if event.key == pygame.K_1:
+                winner_of_own_map = False
+                intro = True
+        #End If
+    #Next event
 if endgame == True:
     pygame.quit()

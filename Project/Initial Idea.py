@@ -10,7 +10,7 @@ BROWN = (155,103,60)
 # -- Initialise PyGame
 pygame.init()
 # -- Blank Screen
-size = (640,480)
+size = (1000,480)
 screen = pygame.display.set_mode(size)
 # -- Title of new window/screen
 pygame.display.set_caption("My Project")
@@ -332,6 +332,7 @@ while my_game == True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 intro = False
+                my_game = False
                 endgame = True
             #End If
         #Next event
@@ -345,9 +346,9 @@ while my_game == True:
         screen.fill(BLACK)
         font = pygame.font.SysFont('ComicSans', 50, True, False)
         text = font.render('Welcome to my Game!', True, WHITE)
-        screen.blit(text, [100, 50])
+        screen.blit(text, [285, 50])
         text = font.render('Press 1 to Draw your Map', True, WHITE)
-        screen.blit(text, [70, 100])
+        screen.blit(text, [250, 100])
         # -- Draw here
         # -- flip display to reveal new position of objects
         pygame.display.flip()
@@ -377,6 +378,7 @@ while my_game == True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 map_draw = False
+                my_game = False
                 endgame = True
             elif event.type == pygame.KEYDOWN: # - a key is down
                 if event.key == pygame.K_RIGHT: # - if the left key pressed
@@ -600,6 +602,7 @@ while my_game == True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 in_game = False
+                my_game = False
                 endgame = True
             #End If
         #Next event
@@ -674,12 +677,66 @@ while my_game == True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 winner_of_own_map = False
+                my_game = False
                 endgame = True
             elif event.type == pygame.KEYDOWN: # - a key is down
-                if event.key == pygame.K_1:
+                if event.key == pygame.K_RETURN:
                     winner_of_own_map = False
                     intro = True
+                if event.key == pygame.K_ESCAPE:
+                    winner_of_own_map = False
+                    my_game = False
+                    endgame = True
             #End If
         #Next event
-    if endgame == True:
-        pygame.quit()
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+        font = pygame.font.SysFont('ComicSans', 100, True, False)
+        text = font.render('All Apples Collected!', True, WHITE)
+        screen.blit(text, [85, 70])
+        text = font.render('You Win!', True, WHITE)
+        screen.blit(text, [315, 200])
+        font = pygame.font.SysFont('ComicSans', 30, True, False)
+        text = font.render('Press enter to return to the home page', True, WHITE)
+        screen.blit(text, [250, 330])
+        text = font.render('Press escape to quit', True, WHITE)
+        screen.blit(text, [360, 360])
+        # -- flip display to reveal new position of objects
+        pygame.display.flip()
+        # - The clock ticks over
+        clock.tick(60)
+    while loser_of_own_map == True:
+        # -- User input and controls
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                loser_of_own_map = False
+                my_game = False
+                endgame = True
+            elif event.type == pygame.KEYDOWN: # - a key is down
+                if event.key == pygame.K_RETURN:
+                    loser_of_own_map = False
+                    intro = True
+                if event.key == pygame.K_ESCAPE:
+                    loser_of_own_map = False
+                    my_game = False
+                    endgame = True
+            #End If
+        #Next event
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+        font = pygame.font.SysFont('ComicSans', 100, True, False)
+        text = font.render('You Are Dead!', True, WHITE)
+        screen.blit(text, [200, 70])
+        text = font.render('You Lose!', True, WHITE)
+        screen.blit(text, [285, 200])
+        font = pygame.font.SysFont('ComicSans', 30, True, False)
+        text = font.render('Press enter to return to the home page', True, WHITE)
+        screen.blit(text, [250, 330])
+        text = font.render('Press escape to quit', True, WHITE)
+        screen.blit(text, [360, 360])
+        # -- flip display to reveal new position of objects
+        pygame.display.flip()
+        # - The clock ticks over
+        clock.tick(60)
+if endgame == True:
+    pygame.quit()

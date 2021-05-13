@@ -45,7 +45,6 @@ class Monster_Draw(pygame.sprite.Sprite):
         self.rect.x = x_ref
         self.rect.y = y_ref
 class Monster(pygame.sprite.Sprite):
-    # Define the constructor for invader
     def __init__(self, x_ref, y_ref, old_x, old_y):
         # Call the sprite constructor
         super().__init__()

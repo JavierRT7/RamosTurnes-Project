@@ -16,7 +16,6 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption("My Project")
 #Classes
 class Player(pygame.sprite.Sprite):
-    # Define the constructor for invader
     def __init__(self, x_ref, y_ref, speed_x, speed_y, health, apples):
         # Call the sprite constructor
         super().__init__()

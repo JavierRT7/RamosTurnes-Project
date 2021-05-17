@@ -290,6 +290,7 @@ endgame = False
 winner_of_own_map = False
 loser_of_own_map = False
 is_player_there = False
+levels_menu = False
 level1 = [[5, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6], 
 [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 [0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], 
@@ -499,6 +500,10 @@ while my_game == True:
             intro = False
             map_draw = True
         #End If
+        if keys[pygame.K_2]:
+            intro = False
+            levels_menu = True
+        #End If
         # -- Game logic goes after this comment
         # -- Screen background is BLACK
         screen.fill(BLACK)
@@ -507,6 +512,8 @@ while my_game == True:
         screen.blit(text, [285, 50])
         text = font.render('Press 1 to Draw your Map', True, WHITE)
         screen.blit(text, [250, 100])
+        text = font.render('Press 2 to Play Levels', True, WHITE)
+        screen.blit(text, [280, 150])
         # -- Draw here
         # -- flip display to reveal new position of objects
         pygame.display.flip()

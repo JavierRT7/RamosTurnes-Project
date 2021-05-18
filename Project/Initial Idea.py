@@ -198,7 +198,6 @@ class Door(pygame.sprite.Sprite):
         #Next
 #End Class
 class Selector_Left(pygame.sprite.Sprite):
-    # Define the constructor for invader
     def __init__(self, x_ref, y_ref):
         # Call the sprite constructor
         super().__init__()

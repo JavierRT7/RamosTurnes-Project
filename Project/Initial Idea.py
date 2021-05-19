@@ -632,7 +632,6 @@ while my_game == True:
                     all_sprites_group.add(monster)
                     map[selector_top.pos_x][selector_top.pos_y] = 6
                 if event.key == pygame.K_RETURN:
-                    print(map)
                     map_draw = False
                     in_game = True
                 #End If

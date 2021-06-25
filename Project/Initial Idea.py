@@ -535,6 +535,47 @@ while my_game == True:
     selector_bottom = Selector_Bottom(0, 35)
     all_sprites_group.add(selector_bottom)
     selector_sprites_group.add(selector_bottom)
+    while levels_menu == True:
+        # -- User input and controls
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                levels_menu = False
+                my_game = False
+                endgame = True
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    map = level1
+        #Next event
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+        font = pygame.font.SysFont('ComicSans', 50, True, False)
+        text = font.render('Which level do you want to do?', True, WHITE)
+        screen.blit(text, [200, 30])
+        font = pygame.font.SysFont('ComicSans', 45, True, False)
+        text = font.render('Press 1 to play level 1', True, WHITE)
+        screen.blit(text, [300, 70])
+        text = font.render('Press 2 to play level 2', True, WHITE)
+        screen.blit(text, [300, 100])
+        text = font.render('Press 3 to play level 3', True, WHITE)
+        screen.blit(text, [300, 130])
+        text = font.render('Press 4 to play level 4', True, WHITE)
+        screen.blit(text, [300, 160])
+        text = font.render('Press 5 to play level 5', True, WHITE)
+        screen.blit(text, [300, 190])
+        text = font.render('Press 6 to play level 6', True, WHITE)
+        screen.blit(text, [300, 220])
+        text = font.render('Press 7 to play level 7', True, WHITE)
+        screen.blit(text, [300, 250])
+        text = font.render('Press 8 to play level 8', True, WHITE)
+        screen.blit(text, [300, 280])
+        text = font.render('Press 9 to play level 9', True, WHITE)
+        screen.blit(text, [300, 310])
+        text = font.render('Press x to play level 10', True, WHITE)
+        screen.blit(text, [291, 340])
+        # -- flip display to reveal new position of objects
+        pygame.display.flip()
+        # - The clock ticks over
+        clock.tick(60)
     while map_draw == True:
     # -- User input and controls
         size = (1000, 480)

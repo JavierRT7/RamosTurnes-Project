@@ -291,6 +291,8 @@ loser_of_own_map = False
 is_player_there = False
 levels_menu = False
 mapping = False
+winner_of_level = False
+loser_of_level = False
 level1 = [[5, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6], 
 [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 [0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], 
@@ -481,6 +483,8 @@ while my_game == True:
     monster_group = pygame.sprite.Group()
     apple_group = pygame.sprite.Group()
     apple_number = 0
+    own_level = False
+    score = 0
     # -- Manages how fast screen refreshes
     clock = pygame.time.Clock()
     ### -- Game Loop
@@ -499,10 +503,12 @@ while my_game == True:
         if keys[pygame.K_1]:
             intro = False
             map_draw = True
+            own_level = False
         #End If
         if keys[pygame.K_2]:
             intro = False
             levels_menu = True
+            own_level = True
         #End If
         # -- Game logic goes after this comment
         # -- Screen background is BLACK
@@ -842,6 +848,7 @@ while my_game == True:
                 #End If
             #Next
         #Next
+        score = 30000
         mapping = False
         in_game = True
     while in_game == True:
@@ -895,12 +902,20 @@ while my_game == True:
         for foo in player_apple_hit_list:
             player.apples = player.apples + 1
         all_sprites_group.update()
-        if player.apples == apple_number:
+        if player.apples == apple_number and own_level == False:
+            score = score + player.health * 60
             in_game = False
             winner_of_own_map = True
-        if player.health < 1:
+        if player.health < 1 and own_level == False:
             in_game = False
             loser_of_own_map = True
+        if player.apples == apple_number and own_level == True:
+            score = score + player.health * 60
+            in_game = False
+            winner_of_level = True
+        if player.health < 1 and own_level == True:
+            in_game = False
+            loser_of_level = True
         # -- Screen background is BLACK
         screen.fill(WHITE)
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
@@ -918,6 +933,7 @@ while my_game == True:
         pygame.display.flip()
         # - The clock ticks over
         clock.tick(60)
+        score = score - 1
     #End While - End of game loop
     while winner_of_own_map == True:
         # -- User input and controls
@@ -942,7 +958,9 @@ while my_game == True:
         text = font.render('All Apples Collected!', True, WHITE)
         screen.blit(text, [85, 70])
         text = font.render('You Win!', True, WHITE)
-        screen.blit(text, [315, 200])
+        screen.blit(text, [315, 142])
+        text = font.render('Your Score Was: ' + str(score), True, WHITE)
+        screen.blit(text, [60, 214])
         font = pygame.font.SysFont('ComicSans', 30, True, False)
         text = font.render('Press enter to return to the home page', True, WHITE)
         screen.blit(text, [250, 330])
@@ -965,6 +983,74 @@ while my_game == True:
                     intro = True
                 if event.key == pygame.K_ESCAPE:
                     loser_of_own_map = False
+                    my_game = False
+                    endgame = True
+            #End If
+        #Next event
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+        font = pygame.font.SysFont('ComicSans', 100, True, False)
+        text = font.render('You Are Dead!', True, WHITE)
+        screen.blit(text, [200, 70])
+        text = font.render('You Lose!', True, WHITE)
+        screen.blit(text, [285, 200])
+        font = pygame.font.SysFont('ComicSans', 30, True, False)
+        text = font.render('Press enter to return to the home page', True, WHITE)
+        screen.blit(text, [250, 330])
+        text = font.render('Press escape to quit', True, WHITE)
+        screen.blit(text, [360, 360])
+        # -- flip display to reveal new position of objects
+        pygame.display.flip()
+        # - The clock ticks over
+        clock.tick(60)
+    while winner_of_level == True:
+        # -- User input and controls
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                winner_of_level = False
+                my_game = False
+                endgame = True
+            elif event.type == pygame.KEYDOWN: # - a key is down
+                if event.key == pygame.K_RETURN:
+                    winner_of_level = False
+                    intro = True
+                if event.key == pygame.K_ESCAPE:
+                    winner_of_level = False
+                    my_game = False
+                    endgame = True
+            #End If
+        #Next event
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+        font = pygame.font.SysFont('ComicSans', 100, True, False)
+        text = font.render('All Apples Collected!', True, WHITE)
+        screen.blit(text, [85, 70])
+        text = font.render('You Win!', True, WHITE)
+        screen.blit(text, [315, 142])
+        text = font.render('Your Score Was: ' + str(score), True, WHITE)
+        screen.blit(text, [60, 214])
+        font = pygame.font.SysFont('ComicSans', 30, True, False)
+        text = font.render('Press enter to return to the home page', True, WHITE)
+        screen.blit(text, [250, 330])
+        text = font.render('Press escape to quit', True, WHITE)
+        screen.blit(text, [360, 360])
+        # -- flip display to reveal new position of objects
+        pygame.display.flip()
+        # - The clock ticks over
+        clock.tick(60)
+    while loser_of_level == True:
+        # -- User input and controls
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                loser_of_level = False
+                my_game = False
+                endgame = True
+            elif event.type == pygame.KEYDOWN: # - a key is down
+                if event.key == pygame.K_RETURN:
+                    loser_of_level = False
+                    intro = True
+                if event.key == pygame.K_ESCAPE:
+                    loser_of_level = False
                     my_game = False
                     endgame = True
             #End If

@@ -290,6 +290,7 @@ winner_of_own_map = False
 loser_of_own_map = False
 is_player_there = False
 levels_menu = False
+mapping = False
 level1 = [[5, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6], 
 [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 [0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], 
@@ -545,6 +546,44 @@ while my_game == True:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     map = level1
+                    levels_menu = False
+                    mapping = True
+                elif event.key == pygame.K_2:
+                    map = level2
+                    levels_menu = False
+                    mapping = True
+                elif event.key == pygame.K_3:
+                    map = level3
+                    levels_menu = False
+                    mapping = True
+                elif event.key == pygame.K_4:
+                    map = level4
+                    levels_menu = False
+                    mapping = True
+                elif event.key == pygame.K_5:
+                    map = level5
+                    levels_menu = False
+                    mapping = True
+                elif event.key == pygame.K_6:
+                    map = level6
+                    levels_menu = False
+                    mapping = True
+                elif event.key == pygame.K_7:
+                    map = level7
+                    levels_menu = False
+                    mapping = True
+                elif event.key == pygame.K_8:
+                    map = level8
+                    levels_menu = False
+                    mapping = True
+                elif event.key == pygame.K_9:
+                    map = level9
+                    levels_menu = False
+                    mapping = True
+                elif event.key == pygame.K_x:
+                    map = level10
+                    levels_menu = False
+                    mapping = True
         #Next event
         screen.fill(BLACK)
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
@@ -674,7 +713,7 @@ while my_game == True:
                     map[selector_top.pos_x][selector_top.pos_y] = 6
                 if event.key == pygame.K_RETURN:
                     map_draw = False
-                    in_game = True
+                    mapping = True
                 #End If
         #Next event
         # -- Game logic goes after this comment
@@ -732,76 +771,79 @@ while my_game == True:
         # - The clock ticks over
         clock.tick(60)
     #End While - End of game loop
-    for y in range(12):
-        for x in range(16):
-            if map[x][y] == 0:
-                map_block = Map_Block(WHITE, 40, 40, x*40, y *40)
-                map_sprites_group.add(map_block)
-                all_sprites_group.add(map_block)
-            #End If
+    while mapping == True:
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 0:
+                    map_block = Map_Block(WHITE, 40, 40, x*40, y *40)
+                    map_sprites_group.add(map_block)
+                    all_sprites_group.add(map_block)
+                #End If
+            #Next
         #Next
-    #Next
-    for y in range(12):
-        for x in range(16):
-            if map[x][y] == 1:
-                brick = Brick(x*40, y*40)
-                map_sprites_group.add(brick)
-                all_sprites_group.add(brick)
-                brick_group.add(brick)
-            #End If
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 1:
+                    brick = Brick(x*40, y*40)
+                    map_sprites_group.add(brick)
+                    all_sprites_group.add(brick)
+                    brick_group.add(brick)
+                #End If
+            #Next
         #Next
-    #Next
-    for y in range(12):
-        for x in range(16):
-            if map[x][y] == 2:
-                window = Window(x*40, y *40)
-                map_sprites_group.add(window)
-                all_sprites_group.add(window)
-                window_group.add(window)
-            #End If
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 2:
+                    window = Window(x*40, y *40)
+                    map_sprites_group.add(window)
+                    all_sprites_group.add(window)
+                    window_group.add(window)
+                #End If
+            #Next
         #Next
-    #Next
-    for y in range(12):
-        for x in range(16):
-            if map[x][y] == 3:
-                door = Door(x*40, y *40, True)
-                map_sprites_group.add(door)
-                all_sprites_group.add(door)
-                door_group.add(door)
-                closed_door_group.add(door)
-            #End If
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 3:
+                    door = Door(x*40, y *40, True)
+                    map_sprites_group.add(door)
+                    all_sprites_group.add(door)
+                    door_group.add(door)
+                    closed_door_group.add(door)
+                #End If
+            #Next
         #Next
-    #Next
-    for y in range(12):
-        for x in range(16):
-            if map[x][y] == 4:
-                apple = Apple(x*40, y *40)
-                map_sprites_group.add(apple)
-                apple_group.add(apple)
-                all_sprites_group.add(apple)
-                apple_number = apple_number + 1
-            #End If
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 4:
+                    apple = Apple(x*40, y *40)
+                    map_sprites_group.add(apple)
+                    apple_group.add(apple)
+                    all_sprites_group.add(apple)
+                    apple_number = apple_number + 1
+                #End If
+            #Next
         #Next
-    #Next
-    for y in range(12):
-        for x in range(16):
-            if map[x][y] == 5:
-                player = Player(x*40 + 5, y *40 + 5, 0, 0, 100, 0)
-                player_sprites_group.add(player)
-                all_sprites_group.add(player)
-            #End If
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 5:
+                    player = Player(x*40 + 5, y *40 + 5, 0, 0, 100, 0)
+                    player_sprites_group.add(player)
+                    all_sprites_group.add(player)
+                #End If
+            #Next
         #Next
-    #Next
-    for y in range(12):
-        for x in range(16):
-            if map[x][y] == 6:
-                monster = Monster(x*40 + 5, y *40 + 5, x*40 + 5, y*40 + 5)
-                map_sprites_group.add(monster)
-                all_sprites_group.add(monster)
-                monster_group.add(monster)
-            #End If
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 6:
+                    monster = Monster(x*40 + 5, y *40 + 5, x*40 + 5, y*40 + 5)
+                    map_sprites_group.add(monster)
+                    all_sprites_group.add(monster)
+                    monster_group.add(monster)
+                #End If
+            #Next
         #Next
-    #Next
+        mapping = False
+        in_game = True
     while in_game == True:
         # -- User input and controls
         for event in pygame.event.get():

@@ -293,6 +293,7 @@ levels_menu = False
 mapping = False
 winner_of_level = False
 loser_of_level = False
+winner_of_all_levels = False
 level1 = [[5, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6], 
 [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 [0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], 
@@ -484,6 +485,10 @@ while my_game == True:
     apple_group = pygame.sprite.Group()
     apple_number = 0
     own_level = False
+    all_levels = False
+    all_level_mapping = False
+    all_level_game = False
+    total_score = 0
     score = 0
     # -- Manages how fast screen refreshes
     clock = pygame.time.Clock()
@@ -590,6 +595,11 @@ while my_game == True:
                     map = level10
                     levels_menu = False
                     mapping = True
+                elif event.key == pygame.K_a:
+                    levels_menu = False
+                    all_level_mapping = True
+                    all_levels = True
+                    total_score = 0
         #Next event
         screen.fill(BLACK)
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
@@ -617,6 +627,8 @@ while my_game == True:
         screen.blit(text, [300, 310])
         text = font.render('Press x to play level 10', True, WHITE)
         screen.blit(text, [291, 340])
+        text = font.render('Press a to play all levels', True, WHITE)
+        screen.blit(text, [280, 370])
         # -- flip display to reveal new position of objects
         pygame.display.flip()
         # - The clock ticks over
@@ -777,6 +789,191 @@ while my_game == True:
         # - The clock ticks over
         clock.tick(60)
     #End While - End of game loop
+    if all_levels == True:
+        for counter in range(1, 10):
+            if counter == 1:
+                map = level1
+            elif counter == 2:
+                map = level2
+            elif counter == 3:
+                map = level3
+            elif counter == 4:
+                map = level4
+            elif counter == 5:
+                map = level5
+            elif counter == 6:
+                map = level6
+            elif counter == 7:
+                map = level7
+            elif counter == 8:
+                map = level8
+            elif counter == 9:
+                map = level9
+            elif counter == 10:
+                map = level10
+            while all_level_mapping == True:
+                for y in range(12):
+                    for x in range(16):
+                        if map[x][y] == 0:
+                            map_block = Map_Block(WHITE, 40, 40, x*40, y *40)
+                            map_sprites_group.add(map_block)
+                            all_sprites_group.add(map_block)
+                        #End If
+                    #Next
+                #Next
+                for y in range(12):
+                    for x in range(16):
+                        if map[x][y] == 1:
+                            brick = Brick(x*40, y*40)
+                            map_sprites_group.add(brick)
+                            all_sprites_group.add(brick)
+                            brick_group.add(brick)
+                        #End If
+                    #Next
+                #Next
+                for y in range(12):
+                    for x in range(16):
+                        if map[x][y] == 2:
+                            window = Window(x*40, y *40)
+                            map_sprites_group.add(window)
+                            all_sprites_group.add(window)
+                            window_group.add(window)
+                        #End If
+                    #Next
+                #Next
+                for y in range(12):
+                    for x in range(16):
+                        if map[x][y] == 3:
+                            door = Door(x*40, y *40, True)
+                            map_sprites_group.add(door)
+                            all_sprites_group.add(door)
+                            door_group.add(door)
+                            closed_door_group.add(door)
+                        #End If
+                    #Next
+                #Next
+                for y in range(12):
+                    for x in range(16):
+                        if map[x][y] == 4:
+                            apple = Apple(x*40, y *40)
+                            map_sprites_group.add(apple)
+                            apple_group.add(apple)
+                            all_sprites_group.add(apple)
+                            apple_number = apple_number + 1
+                        #End If
+                    #Next
+                #Next
+                for y in range(12):
+                    for x in range(16):
+                        if map[x][y] == 5:
+                            player = Player(x*40 + 5, y *40 + 5, 0, 0, 100, 0)
+                            player_sprites_group.add(player)
+                            all_sprites_group.add(player)
+                        #End If
+                    #Next
+                #Next
+                for y in range(12):
+                    for x in range(16):
+                        if map[x][y] == 6:
+                            monster = Monster(x*40 + 5, y *40 + 5, x*40 + 5, y*40 + 5)
+                            map_sprites_group.add(monster)
+                            all_sprites_group.add(monster)
+                            monster_group.add(monster)
+                        #End If
+                    #Next
+                #Next
+                score = 30000
+                all_level_mapping = False
+                all_level_game = True
+            while all_level_game == True:
+                # -- User input and controls
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        all_level_game = False
+                        my_game = False
+                        endgame = True
+                    #End If
+                #Next event
+                # -- Game logic goes after this comment
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_UP]:
+                    player.speed_y = -2
+                    player.rect.y = player.rect.y + player.speed_y
+                    if player.rect.y < 0:
+                        player.rect.y = player.rect.y - player.speed_y
+                #End If
+                if keys[pygame.K_DOWN]:
+                    player.speed_y = 2
+                    player.rect.y = player.rect.y + player.speed_y
+                    if player.rect.y > 450:
+                        player.rect.y = player.rect.y - player.speed_y
+                #End If
+                if keys[pygame.K_RIGHT]:
+                    player.speed_x = 2
+                    player.rect.x = player.rect.x + player.speed_x
+                    if player.rect.x > 610:
+                        player.rect.x = player.rect.x - player.speed_x
+                #End If
+                if keys[pygame.K_LEFT]:
+                    player.speed_x = -2
+                    player.rect.x = player.rect.x + player.speed_x
+                    if player.rect.x < 0:
+                        player.rect.x = player.rect.x - player.speed_x
+                #End If
+                player_brick_hit_list = pygame.sprite.spritecollide(player, brick_group, False)
+                for foo in player_brick_hit_list:
+                    player.rect.x = player.old_x
+                    player.rect.y = player.old_y
+                    player.speed_x = 0
+                    player.speed_y = 0
+                player_window_hit_list = pygame.sprite.spritecollide(player, window_group, False)
+                for foo in player_window_hit_list:
+                    player.rect.x = player.old_x
+                    player.rect.y = player.old_y
+                    player.speed_x = 0
+                    player.speed_y = 0
+                player_apple_hit_list = pygame.sprite.groupcollide(player_sprites_group, apple_group, dokilla=False, dokillb=True, collided=None)
+                for foo in player_apple_hit_list:
+                    player.apples = player.apples + 1
+                all_sprites_group.update()
+                if player.apples == apple_number and counter == 10:
+                    all_level_game = False
+                    winner_of_all_levels = True
+                elif player.apples == apple_number:
+                    all_level_game = False
+                    all_level_mapping = True
+                if player.health < 1 and own_level == False:
+                    in_game = False
+                    loser_of_own_map = True
+                if player.health < 1 and own_level == True:
+                    in_game = False
+                    loser_of_level = True
+                # -- Screen background is BLACK
+                screen.fill(WHITE)
+                pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+                map_sprites_group.draw(screen)
+                player_sprites_group.draw(screen)
+                font = pygame.font.SysFont('ComicSans', 30, True, False)
+                text = font.render('Press 1 to open a door', True, WHITE)
+                screen.blit(text, [650, 10])
+                text = font.render('Health: ' + str(player.health), True, WHITE)
+                screen.blit(text, [650, 40])
+                text = font.render('Apples: ' + str(player.apples), True, WHITE)
+                screen.blit(text, [650, 70])
+                # -- Draw here
+                # -- flip display to reveal new position of objects
+                pygame.display.flip()
+                # - The clock ticks over
+                clock.tick(60)
+                score = score - 1
+                print(apple_number)
+            #End While - End of game loop
+            for sprite in map_sprites_group:
+                sprite.kill()
+            for sprite in player_sprites_group:
+                sprite.kill()
+            total_score = total_score + score
+            apple_number = 0
     while mapping == True:
         for y in range(12):
             for x in range(16):

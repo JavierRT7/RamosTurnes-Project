@@ -943,10 +943,10 @@ while my_game == True:
                     all_level_game = False
                     all_level_mapping = True
                 if player.health < 1 and own_level == False:
-                    in_game = False
+                    all_level_game = False
                     loser_of_own_map = True
                 if player.health < 1 and own_level == True:
-                    in_game = False
+                    all_level_game = False
                     loser_of_level = True
                 # -- Screen background is BLACK
                 screen.fill(WHITE)
@@ -966,7 +966,6 @@ while my_game == True:
                 # - The clock ticks over
                 clock.tick(60)
                 score = score - 1
-                print(apple_number)
             #End While - End of game loop
             for sprite in map_sprites_group:
                 sprite.kill()
@@ -1259,6 +1258,41 @@ while my_game == True:
         screen.blit(text, [200, 70])
         text = font.render('You Lose!', True, WHITE)
         screen.blit(text, [285, 200])
+        font = pygame.font.SysFont('ComicSans', 30, True, False)
+        text = font.render('Press enter to return to the home page', True, WHITE)
+        screen.blit(text, [250, 330])
+        text = font.render('Press escape to quit', True, WHITE)
+        screen.blit(text, [360, 360])
+        # -- flip display to reveal new position of objects
+        pygame.display.flip()
+        # - The clock ticks over
+        clock.tick(60)
+    while winner_of_all_levels == True:
+        # -- User input and controls
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                winner_of_all_levels = False
+                my_game = False
+                endgame = True
+            elif event.type == pygame.KEYDOWN: # - a key is down
+                if event.key == pygame.K_RETURN:
+                    winner_of_all_levels = False
+                    intro = True
+                if event.key == pygame.K_ESCAPE:
+                    winner_of_all_levels = False
+                    my_game = False
+                    endgame = True
+            #End If
+        #Next event
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+        font = pygame.font.SysFont('ComicSans', 100, True, False)
+        text = font.render('All Apples Collected!', True, WHITE)
+        screen.blit(text, [85, 70])
+        text = font.render('You Win!', True, WHITE)
+        screen.blit(text, [315, 142])
+        text = font.render('Your Score Was: ' + str(total_score), True, WHITE)
+        screen.blit(text, [60, 214])
         font = pygame.font.SysFont('ComicSans', 30, True, False)
         text = font.render('Press enter to return to the home page', True, WHITE)
         screen.blit(text, [250, 330])

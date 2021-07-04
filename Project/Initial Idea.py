@@ -7,6 +7,7 @@ WHITE = (255,255,255)
 BLUE = (50,50,255)
 YELLOW = (255,255,0)
 BROWN = (155,103,60)
+GREY = (140, 143, 141)
 # -- Initialise PyGame
 pygame.init()
 # -- Blank Screen
@@ -138,6 +139,10 @@ class Monster(pygame.sprite.Sprite):
             self.speed_y = random.randint(-2, 2)
         self.old_x = self.rect.x
         self.old_y = self.rect.y
+        if self.rect.x - 150 > player.rect.x or self.rect.x + 150 < player.rect.x or self.rect.y - 150 > player.rect.y or self.rect.y + 150 < player.rect.y:
+            drawing_group.remove(self)
+        else:
+            drawing_group.add(self)
 #End Class
 class Map_Block(pygame.sprite.Sprite):
     # Define the constructor for invader
@@ -151,7 +156,7 @@ class Map_Block(pygame.sprite.Sprite):
         # Set the position of the player attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
-    #End Procedure
+    #End Procedure    
 #End Class
 class Brick(pygame.sprite.Sprite):
     # Define the constructor for invader
@@ -280,10 +285,18 @@ class Apple(pygame.sprite.Sprite):
         self.rect.y = y_ref
     #End Procedure
     def update(self):
+        death = False
         player_apple_hit_list = pygame.sprite.spritecollide(self, player_sprites_group, False)
         for foo in player_apple_hit_list:
+            drawing_group.remove(self)
             self.kill()
             player.apples = player.apples + 1
+            death = True
+        if death == False:
+            if self.rect.x - 150 > player.rect.x or self.rect.x + 150 < player.rect.x or self.rect.y - 150 > player.rect.y or self.rect.y + 150 < player.rect.y:
+                drawing_group.remove(self)
+            else:
+                drawing_group.add(self)
 #End Class
 # -- Exit game flag set to false
 my_game = True
@@ -488,6 +501,7 @@ while my_game == True:
     closed_door_group = pygame.sprite.Group()
     monster_group = pygame.sprite.Group()
     apple_group = pygame.sprite.Group()
+    drawing_group = pygame.sprite.Group()
     apple_number = 0
     own_level = False
     all_levels = False
@@ -949,8 +963,11 @@ while my_game == True:
                 # -- Screen background is BLACK
                 screen.fill(WHITE)
                 pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
-                map_sprites_group.draw(screen)
+                brick_group.draw(screen)
+                window_group.draw(screen)
+                door_group.draw(screen)
                 player_sprites_group.draw(screen)
+                drawing_group.draw(screen)
                 font = pygame.font.SysFont('ComicSans', 30, True, False)
                 text = font.render('Press 1 to open a door', True, WHITE)
                 screen.blit(text, [650, 10])
@@ -1112,7 +1129,10 @@ while my_game == True:
         # -- Screen background is BLACK
         screen.fill(WHITE)
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
-        map_sprites_group.draw(screen)
+        brick_group.draw(screen)
+        window_group.draw(screen)
+        door_group.draw(screen)
+        drawing_group.draw(screen)
         player_sprites_group.draw(screen)
         font = pygame.font.SysFont('ComicSans', 30, True, False)
         text = font.render('Press 1 to open a door', True, WHITE)

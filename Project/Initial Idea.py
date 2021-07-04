@@ -279,6 +279,11 @@ class Apple(pygame.sprite.Sprite):
         self.rect.x = x_ref
         self.rect.y = y_ref
     #End Procedure
+    def update(self):
+        player_apple_hit_list = pygame.sprite.spritecollide(self, player_sprites_group, False)
+        for foo in player_apple_hit_list:
+            self.kill()
+            player.apples = player.apples + 1
 #End Class
 # -- Exit game flag set to false
 my_game = True
@@ -932,9 +937,6 @@ while my_game == True:
                     player.rect.y = player.old_y
                     player.speed_x = 0
                     player.speed_y = 0
-                player_apple_hit_list = pygame.sprite.groupcollide(player_sprites_group, apple_group, dokilla=False, dokillb=True, collided=None)
-                for foo in player_apple_hit_list:
-                    player.apples = player.apples + 1
                 all_sprites_group.update()
                 if player.apples == apple_number and counter == 10:
                     all_level_game = False
@@ -1045,6 +1047,8 @@ while my_game == True:
             #Next
         #Next
         score = 30000
+        for sprite in draw_sprites_group:
+            sprite.kill()
         mapping = False
         in_game = True
     while in_game == True:
@@ -1094,9 +1098,6 @@ while my_game == True:
             player.rect.y = player.old_y
             player.speed_x = 0
             player.speed_y = 0
-        player_apple_hit_list = pygame.sprite.groupcollide(player_sprites_group, apple_group, dokilla=False, dokillb=True, collided=None)
-        for foo in player_apple_hit_list:
-            player.apples = player.apples + 1
         all_sprites_group.update()
         if player.apples == apple_number and own_level == False:
             score = score + player.health * 60

@@ -386,15 +386,15 @@ level6 = [[0, 0, 0, 4, 4, 6, 0, 0, 0, 0, 6, 6],
 [0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0], 
 [0, 1, 0, 1, 4, 0, 0, 4, 1, 0, 1, 0], 
 [0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0], 
-[0, 3, 0, 0, 6, 6, 0, 0, 1, 4, 1, 0], 
-[0, 3, 0, 0, 6, 6, 0, 0, 1, 4, 1, 0], 
+[0, 3, 0, 0, 6, 0, 0, 0, 1, 4, 1, 0], 
+[0, 3, 0, 0, 0, 6, 0, 0, 1, 4, 1, 0], 
 [0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0], 
 [0, 1, 0, 1, 1, 0, 0, 4, 1, 0, 1, 0], 
 [0, 1, 0, 1, 4, 0, 1, 1, 1, 0, 1, 0], 
 [0, 1, 6, 0, 0, 0, 0, 0, 0, 6, 1, 0], 
 [0, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 0], 
-[0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 6, 6], 
-[0, 0, 0, 4, 4, 6, 0, 0, 0, 0, 6, 6]]
+[0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0], 
+[0, 0, 0, 4, 4, 6, 0, 0, 0, 0, 0, 6]]
 level7 = [[5, 0, 0, 1, 1, 1, 1, 1, 1, 4, 0, 0], 
 [0, 0, 0, 2, 4, 0, 0, 4, 2, 0, 0, 0], 
 [1, 1, 0, 1, 0, 6, 0, 0, 1, 0, 1, 0], 
@@ -523,14 +523,10 @@ while my_game == True:
         # -- Game logic goes after this comment
         # -- Screen background is BLACK
         screen.fill(BLACK)
-        font = pygame.font.SysFont('ComicSans', 50, True, False)
-        text = font.render('Welcome to my Game!', True, WHITE)
-        screen.blit(text, [285, 50])
-        text = font.render('Press 1 to Draw your Map', True, WHITE)
-        screen.blit(text, [250, 100])
-        text = font.render('Press 2 to Play Levels', True, WHITE)
-        screen.blit(text, [280, 150])
         # -- Draw here
+        intro_screen = pygame.image.load('Template.png').convert_alpha()
+        intro_screen = pygame.transform.smoothscale(intro_screen, (1000, 480)) 
+        screen.blit(intro_screen, (0, 0))
         # -- flip display to reveal new position of objects
         pygame.display.flip()
         # - The clock ticks over

@@ -156,7 +156,12 @@ class Map_Block(pygame.sprite.Sprite):
         # Set the position of the player attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
-    #End Procedure    
+    #End Procedure  
+    def update(self):
+        if self.rect.x - 150 > player.rect.x or self.rect.x + 150 < player.rect.x or self.rect.y - 150 > player.rect.y or self.rect.y + 150 < player.rect.y:
+            self.image.fill(GREY)
+        else:
+            self.image.fill(WHITE)  
 #End Class
 class Brick(pygame.sprite.Sprite):
     # Define the constructor for invader
@@ -502,6 +507,7 @@ while my_game == True:
     monster_group = pygame.sprite.Group()
     apple_group = pygame.sprite.Group()
     drawing_group = pygame.sprite.Group()
+    map_block_group = pygame.sprite.Group()
     apple_number = 0
     own_level = False
     all_levels = False
@@ -829,11 +835,10 @@ while my_game == True:
             while all_level_mapping == True:
                 for y in range(12):
                     for x in range(16):
-                        if map[x][y] == 0:
-                            map_block = Map_Block(WHITE, 40, 40, x*40, y *40)
-                            map_sprites_group.add(map_block)
-                            all_sprites_group.add(map_block)
-                        #End If
+                        map_block = Map_Block(WHITE, 40, 40, x*40, y *40)
+                        map_sprites_group.add(map_block)
+                        map_block_group.add(map_block)
+                        all_sprites_group.add(map_block)
                     #Next
                 #Next
                 for y in range(12):
@@ -963,6 +968,7 @@ while my_game == True:
                 # -- Screen background is BLACK
                 screen.fill(WHITE)
                 pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+                map_block_group.draw(screen)
                 brick_group.draw(screen)
                 window_group.draw(screen)
                 door_group.draw(screen)
@@ -973,7 +979,7 @@ while my_game == True:
                 screen.blit(text, [650, 10])
                 text = font.render('Health: ' + str(player.health), True, WHITE)
                 screen.blit(text, [650, 40])
-                text = font.render('Apples: ' + str(player.apples), True, WHITE)
+                text = font.render('Apples: ' + str(player.apples) + ' / ' + str(apple_number), True, WHITE)
                 screen.blit(text, [650, 70])
                 # -- Draw here
                 # -- flip display to reveal new position of objects
@@ -991,11 +997,10 @@ while my_game == True:
     while mapping == True:
         for y in range(12):
             for x in range(16):
-                if map[x][y] == 0:
-                    map_block = Map_Block(WHITE, 40, 40, x*40, y *40)
-                    map_sprites_group.add(map_block)
-                    all_sprites_group.add(map_block)
-                #End If
+                map_block = Map_Block(WHITE, 40, 40, x*40, y *40)
+                map_sprites_group.add(map_block)
+                map_block_group.add(map_block)
+                all_sprites_group.add(map_block)
             #Next
         #Next
         for y in range(12):
@@ -1129,6 +1134,7 @@ while my_game == True:
         # -- Screen background is BLACK
         screen.fill(WHITE)
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+        map_block_group.draw(screen)
         brick_group.draw(screen)
         window_group.draw(screen)
         door_group.draw(screen)
@@ -1139,7 +1145,7 @@ while my_game == True:
         screen.blit(text, [650, 10])
         text = font.render('Health: ' + str(player.health), True, WHITE)
         screen.blit(text, [650, 40])
-        text = font.render('Apples: ' + str(player.apples), True, WHITE)
+        text = font.render('Apples: ' + str(player.apples) + ' / ' + str(apple_number), True, WHITE)
         screen.blit(text, [650, 70])
         # -- Draw here
         # -- flip display to reveal new position of objects

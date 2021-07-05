@@ -158,10 +158,23 @@ class Map_Block(pygame.sprite.Sprite):
         self.rect.y = y_ref
     #End Procedure  
     def update(self):
+        self.image.fill(WHITE)
         if self.rect.x - 150 > player.rect.x or self.rect.x + 150 < player.rect.x or self.rect.y - 150 > player.rect.y or self.rect.y + 150 < player.rect.y:
             self.image.fill(GREY)
         else:
             self.image.fill(WHITE)  
+        for sprite in brick_left_group:
+            if self.rect.x < sprite.rect.x:
+                self.image.fill(GREY)
+        for sprite in brick_right_group:
+            if self.rect.x > sprite.rect.x:
+                self.image.fill(GREY)
+        for sprite in brick_up_group:
+            if self.rect.y > sprite.rect.y:
+                self.image.fill(GREY)
+        for sprite in brick_down_group:
+            if self.rect.y < sprite.rect.y:
+                self.image.fill(GREY)
 #End Class
 class Brick(pygame.sprite.Sprite):
     # Define the constructor for invader
@@ -175,6 +188,19 @@ class Brick(pygame.sprite.Sprite):
         self.rect.x = x_ref
         self.rect.y = y_ref
     #End Procedure
+    def update(self):
+        brick_left_group.remove(self)
+        brick_right_group.remove(self)
+        brick_up_group.remove(self)
+        brick_down_group.remove(self)
+        if self.rect.x > player.rect.x and self.rect.x - 150 < player.rect.x:
+            brick_right_group.add(self)
+        elif self.rect.x < player.rect.x and self.rect.x + 150 > player.rect.x:
+            brick_left_group.add(self)
+        if self.rect.y > player.rect.y and self.rect.y - 150 < player.rect.y:
+            brick_up_group.add(self)
+        elif self.rect.y < player.rect.y and self.rect.y + 150 > player.rect.y:
+            brick_down_group.add(self)
 #End Class
 class Door(pygame.sprite.Sprite):
     # Define the constructor for invader
@@ -508,6 +534,10 @@ while my_game == True:
     apple_group = pygame.sprite.Group()
     drawing_group = pygame.sprite.Group()
     map_block_group = pygame.sprite.Group()
+    brick_left_group = pygame.sprite.Group()
+    brick_right_group = pygame.sprite.Group()
+    brick_up_group = pygame.sprite.Group()
+    brick_down_group = pygame.sprite.Group()
     apple_number = 0
     own_level = False
     all_levels = False

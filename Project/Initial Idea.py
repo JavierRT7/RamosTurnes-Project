@@ -143,6 +143,18 @@ class Monster(pygame.sprite.Sprite):
             drawing_group.remove(self)
         else:
             drawing_group.add(self)
+        for sprite in brick_left_group:
+            if self.rect.x < sprite.rect.x:
+                drawing_group.remove(self)
+        for sprite in brick_right_group:
+            if self.rect.x > sprite.rect.x:
+                drawing_group.remove(self)
+        for sprite in brick_up_group:
+            if self.rect.y > sprite.rect.y:
+                drawing_group.remove(self)
+        for sprite in brick_down_group:
+            if self.rect.y < sprite.rect.y:
+                drawing_group.remove(self)
 #End Class
 class Map_Block(pygame.sprite.Sprite):
     # Define the constructor for invader
@@ -193,13 +205,13 @@ class Brick(pygame.sprite.Sprite):
         brick_right_group.remove(self)
         brick_up_group.remove(self)
         brick_down_group.remove(self)
-        if self.rect.x > player.rect.x and self.rect.x - 150 < player.rect.x:
+        if self.rect.x > player.rect.x and self.rect.x - 150 < player.rect.x and (self.rect.y > player.rect.y - 40 and self.rect.y < player.rect.y + 40):
             brick_right_group.add(self)
-        elif self.rect.x < player.rect.x and self.rect.x + 150 > player.rect.x:
+        elif self.rect.x < player.rect.x and self.rect.x + 150 > player.rect.x and (self.rect.y > player.rect.y - 40 and self.rect.y < player.rect.y + 40):
             brick_left_group.add(self)
-        if self.rect.y > player.rect.y and self.rect.y - 150 < player.rect.y:
+        elif self.rect.y > player.rect.y and self.rect.y - 150 < player.rect.y and (self.rect.x > player.rect.x - 40 and self.rect.x < player.rect.x + 40):
             brick_up_group.add(self)
-        elif self.rect.y < player.rect.y and self.rect.y + 150 > player.rect.y:
+        elif self.rect.y < player.rect.y and self.rect.y + 150 > player.rect.y and (self.rect.x > player.rect.x - 40 and self.rect.x < player.rect.x + 40):
             brick_down_group.add(self)
 #End Class
 class Door(pygame.sprite.Sprite):
@@ -232,6 +244,19 @@ class Door(pygame.sprite.Sprite):
                 #End If
             #End If
         #Next
+        if self.state == False:
+            brick_left_group.remove(self)
+            brick_right_group.remove(self)
+            brick_up_group.remove(self)
+            brick_down_group.remove(self)
+            if self.rect.x > player.rect.x and self.rect.x - 150 < player.rect.x and (self.rect.y > player.rect.y - 40 and self.rect.y < player.rect.y + 40):
+                brick_right_group.add(self)
+            elif self.rect.x < player.rect.x and self.rect.x + 150 > player.rect.x and (self.rect.y > player.rect.y - 40 and self.rect.y < player.rect.y + 40):
+                brick_left_group.add(self)
+            elif self.rect.y > player.rect.y and self.rect.y - 150 < player.rect.y and (self.rect.x > player.rect.x - 40 and self.rect.x < player.rect.x + 40):
+                brick_up_group.add(self)
+            elif self.rect.y < player.rect.y and self.rect.y + 150 > player.rect.y and (self.rect.x > player.rect.x - 40 and self.rect.x < player.rect.x + 40):
+                brick_down_group.add(self)
 #End Class
 class Selector_Left(pygame.sprite.Sprite):
     def __init__(self, x_ref, y_ref):
@@ -328,6 +353,18 @@ class Apple(pygame.sprite.Sprite):
                 drawing_group.remove(self)
             else:
                 drawing_group.add(self)
+            for sprite in brick_left_group:
+                if self.rect.x < sprite.rect.x:
+                    drawing_group.remove(self)
+            for sprite in brick_right_group:
+                if self.rect.x > sprite.rect.x:
+                    drawing_group.remove(self)
+            for sprite in brick_up_group:
+                if self.rect.y > sprite.rect.y:
+                    drawing_group.remove(self)
+            for sprite in brick_down_group:
+                if self.rect.y < sprite.rect.y:
+                    drawing_group.remove(self)
 #End Class
 # -- Exit game flag set to false
 my_game = True

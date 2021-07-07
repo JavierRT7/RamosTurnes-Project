@@ -634,6 +634,10 @@ while my_game == True:
             demo_mapping = True
             own_level = True
         #End If
+        if  keys[pygame.K_4]:
+            map = level1
+            intro = False
+            mapping = True
         # -- Game logic goes after this comment
         # -- Screen background is BLACK
         screen.fill(BLACK)

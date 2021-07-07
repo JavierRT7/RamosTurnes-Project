@@ -66,6 +66,10 @@ class Monster(pygame.sprite.Sprite):
         monster_window_hit_list = pygame.sprite.spritecollide(self, window_group, False)
         monster_door_hit_list = pygame.sprite.spritecollide(self, closed_door_group, False)
         monster_player_hit_list = pygame.sprite.spritecollide(self, player_sprites_group, False)
+        while demo_game == True:
+            for foo in monster_player_hit_list:
+                player.speed_x = random.randint(-2, 2)
+                player.speed_y = random.randint(-2, 2)
         monster_group.remove(self)
         monster_monster_hit_list = pygame.sprite.spritecollide(self, monster_group, False)
         for foo in monster_monster_hit_list:
@@ -244,6 +248,10 @@ class Door(pygame.sprite.Sprite):
                 #End If
             #End If
         #Next
+        while demo_game == True:
+            for foo in player_door_hit_list:
+                if self.state == True:
+                    self.state = False
         if self.state == False:
             brick_left_group.remove(self)
             brick_right_group.remove(self)
@@ -380,6 +388,8 @@ mapping = False
 winner_of_level = False
 loser_of_level = False
 winner_of_all_levels = False
+demo_mapping = False
+demo_game = False
 level1 = [[5, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6], 
 [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 [0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], 
@@ -582,6 +592,7 @@ while my_game == True:
     all_level_game = False
     total_score = 0
     score = 0
+    level_demo = random.randint(1, 10)
     # -- Manages how fast screen refreshes
     clock = pygame.time.Clock()
     ### -- Game Loop
@@ -605,6 +616,11 @@ while my_game == True:
         if keys[pygame.K_2]:
             intro = False
             levels_menu = True
+            own_level = True
+        #End If
+        if keys[pygame.K_3]:
+            intro = False
+            demo_mapping = True
             own_level = True
         #End If
         # -- Game logic goes after this comment
@@ -1198,6 +1214,169 @@ while my_game == True:
         if player.health < 1 and own_level == True:
             in_game = False
             loser_of_level = True
+        # -- Screen background is BLACK
+        screen.fill(WHITE)
+        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+        map_block_group.draw(screen)
+        brick_group.draw(screen)
+        window_group.draw(screen)
+        door_group.draw(screen)
+        drawing_group.draw(screen)
+        player_sprites_group.draw(screen)
+        font = pygame.font.SysFont('ComicSans', 30, True, False)
+        text = font.render('Press 1 to open a door', True, WHITE)
+        screen.blit(text, [650, 10])
+        text = font.render('Health: ' + str(player.health), True, WHITE)
+        screen.blit(text, [650, 40])
+        text = font.render('Apples: ' + str(player.apples) + ' / ' + str(apple_number), True, WHITE)
+        screen.blit(text, [650, 70])
+        # -- Draw here
+        # -- flip display to reveal new position of objects
+        pygame.display.flip()
+        # - The clock ticks over
+        clock.tick(60)
+        score = score - 1
+    #End While - End of game loop
+    while demo_mapping == True:
+        if level_demo == 1:
+            map = level1
+        elif level_demo == 2:
+            map = level2
+        elif level_demo == 3:
+            map = level3
+        elif level_demo == 4:
+            map = level4
+        elif level_demo == 5:
+            map = level5
+        elif level_demo == 6:
+            map = level6
+        elif level_demo == 7:
+            map = level7
+        elif level_demo == 8:
+            map = level8
+        elif level_demo == 9:
+            map = level9
+        elif level_demo == 10:
+            map = level10
+        for y in range(12):
+            for x in range(16):
+                map_block = Map_Block(WHITE, 40, 40, x*40, y *40)
+                map_sprites_group.add(map_block)
+                map_block_group.add(map_block)
+                all_sprites_group.add(map_block)
+            #Next
+        #Next
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 1:
+                    brick = Brick(x*40, y*40)
+                    map_sprites_group.add(brick)
+                    all_sprites_group.add(brick)
+                    brick_group.add(brick)
+                #End If
+            #Next
+        #Next
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 2:
+                    window = Window(x*40, y *40)
+                    map_sprites_group.add(window)
+                    all_sprites_group.add(window)
+                    window_group.add(window)
+                #End If
+            #Next
+        #Next
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 3:
+                    door = Door(x*40, y *40, True)
+                    map_sprites_group.add(door)
+                    all_sprites_group.add(door)
+                    door_group.add(door)
+                    closed_door_group.add(door)
+                #End If
+            #Next
+        #Next
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 4:
+                    apple = Apple(x*40, y *40)
+                    map_sprites_group.add(apple)
+                    apple_group.add(apple)
+                    all_sprites_group.add(apple)
+                    apple_number = apple_number + 1
+                #End If
+            #Next
+        #Next
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 5:
+                    player = Player(x*40 + 5, y *40 + 5, 0, 0, 100, 0)
+                    player_sprites_group.add(player)
+                    all_sprites_group.add(player)
+                #End If
+            #Next
+        #Next
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 6:
+                    monster = Monster(x*40 + 5, y *40 + 5, x*40 + 5, y*40 + 5)
+                    map_sprites_group.add(monster)
+                    all_sprites_group.add(monster)
+                    monster_group.add(monster)
+                #End If
+            #Next
+        #Next
+        score = 30000
+        for sprite in draw_sprites_group:
+            sprite.kill()
+        demo_mapping = False
+        demo_game = True
+        player.speed_x = random.randint(-2, 2)
+        player.speed_y = random.randint(-2, 2)
+    while demo_game == True:
+        # -- User input and controls
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                demo_game = False
+                my_game = False
+                endgame = True
+            #End If
+        #Next event
+        # -- Game logic goes after this comment
+        player.rect.x = player.rect.x + player.speed_x
+        player.rect.y = player.rect.y + player.speed_y
+        if player.rect.y < 0:
+            player.rect.y = player.rect.y - player.speed_y
+        if player.rect.y > 450:
+            player.rect.y = player.rect.y - player.speed_y
+        if player.rect.x > 610:
+            player.rect.x = player.rect.x - player.speed_x
+        if player.rect.x < 0:
+            player.rect.x = player.rect.x - player.speed_x
+        player_brick_hit_list = pygame.sprite.spritecollide(player, brick_group, False)
+        for foo in player_brick_hit_list:
+            player.rect.x = player.old_x
+            player.rect.y = player.old_y
+            player.speed_x = random.randint(-2, 2)
+            player.speed_y = random.randint(-2, 2)
+        player_window_hit_list = pygame.sprite.spritecollide(player, window_group, False)
+        for foo in player_window_hit_list:
+            player.rect.x = player.old_x
+            player.rect.y = player.old_y
+            player.speed_x = random.randint(-2, 2)
+            player.speed_y = random.randint(-2, 2)
+        if player.speed_x == 0 and player.speed_y == 0:
+            player.speed_x = random.randint(-2, 2)
+            player.speed_y = random.randint(-2, 2)
+        all_sprites_group.update()
+        if player.apples == apple_number:
+            score = score + player.health * 60
+            demo_game = False
+            winner_of_own_map = True
+        if player.health < 1:
+            demo_game = False
+            loser_of_own_map = True
         # -- Screen background is BLACK
         screen.fill(WHITE)
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))

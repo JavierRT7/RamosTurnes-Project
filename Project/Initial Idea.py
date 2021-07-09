@@ -401,6 +401,8 @@ winner_of_all_levels = False
 demo_mapping = False
 demo_game = False
 demo_end = False
+no_player = False
+no_apples = False
 level1 = [[5, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6], 
 [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 [0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], 
@@ -601,6 +603,7 @@ while my_game == True:
     all_levels = False
     all_level_mapping = False
     all_level_game = False
+    apple_there = False
     total_score = 0
     score = 0
     level_demo = random.randint(1, 10)
@@ -830,27 +833,29 @@ while my_game == True:
                     draw_sprites_group.add(apple)
                     all_sprites_group.add(apple)
                     map[selector_top.pos_x][selector_top.pos_y] = 4
+                    apple_there = True
                 if event.key == pygame.K_5:
-                    for y in range(12):
-                        for x in range(16):
-                            if map[x][y] == 5:
-                                is_player_there = True
-                            #End If
-                        #Next
-                    #Next
                     if is_player_there == False:
                         player = Player(selector_left.rect.x + 5, selector_top.rect.y + 5, 0, 0, 0, 0)
                         draw_sprites_group.add(player)
                         all_sprites_group.add(player)
                         map[selector_top.pos_x][selector_top.pos_y] = 5
+                        is_player_there = True
                 if event.key == pygame.K_6:
                     monster = Monster_Draw(selector_left.rect.x + 5, selector_top.rect.y + 5)
                     draw_sprites_group.add(monster)
                     all_sprites_group.add(monster)
                     map[selector_top.pos_x][selector_top.pos_y] = 6
                 if event.key == pygame.K_RETURN:
-                    map_draw = False
-                    mapping = True
+                    if is_player_there == False:
+                        map_draw = False
+                        no_player = True
+                    elif apple_there == False:
+                        map_draw = False
+                        no_apples = True
+                    else:
+                        map_draw = False
+                        mapping = True
                 #End If
         #Next event
         # -- Game logic goes after this comment
@@ -908,6 +913,72 @@ while my_game == True:
         # - The clock ticks over
         clock.tick(60)
     #End While - End of game loop
+    while no_player == True:
+        # -- User input and controls
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                no_player = False
+                my_game = False
+                endgame = True
+            elif event.type == pygame.KEYDOWN: # - a key is down
+                if event.key == pygame.K_RETURN:
+                    is_player_there = False
+                    apple_there = False
+                    no_player = False
+                    map_draw = True
+                if event.key == pygame.K_ESCAPE:
+                    no_player = False
+                    my_game = False
+                    endgame = True
+            #End If
+        #Next event
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+        font = pygame.font.SysFont('ComicSans', 100, True, False)
+        text = font.render('Place a Player!', True, WHITE)
+        screen.blit(text, [205, 70])
+        font = pygame.font.SysFont('ComicSans', 30, True, False)
+        text = font.render('Press enter to map drawing', True, WHITE)
+        screen.blit(text, [310, 330])
+        text = font.render('Press escape to quit', True, WHITE)
+        screen.blit(text, [360, 360])
+        # -- flip display to reveal new position of objects
+        pygame.display.flip()
+        # - The clock ticks over
+        clock.tick(60)
+    while no_apples == True:
+        # -- User input and controls
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                no_apples = False
+                my_game = False
+                endgame = True
+            elif event.type == pygame.KEYDOWN: # - a key is down
+                if event.key == pygame.K_RETURN:
+                    is_player_there = False
+                    apple_there = False
+                    no_apples = False
+                    map_draw = True
+                if event.key == pygame.K_ESCAPE:
+                    no_apples = False
+                    my_game = False
+                    endgame = True
+            #End If
+        #Next event
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+        font = pygame.font.SysFont('ComicSans', 100, True, False)
+        text = font.render('Place an Apple!', True, WHITE)
+        screen.blit(text, [205, 70])
+        font = pygame.font.SysFont('ComicSans', 30, True, False)
+        text = font.render('Press enter to map drawing', True, WHITE)
+        screen.blit(text, [310, 330])
+        text = font.render('Press escape to quit', True, WHITE)
+        screen.blit(text, [360, 360])
+        # -- flip display to reveal new position of objects
+        pygame.display.flip()
+        # - The clock ticks over
+        clock.tick(60)
     if all_levels == True:
         for counter in range(1, 10):
             if counter == 1:

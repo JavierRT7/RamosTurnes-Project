@@ -403,6 +403,7 @@ demo_game = False
 demo_end = False
 no_player = False
 no_apples = False
+pause = False
 level1 = [[5, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6], 
 [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 [0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], 
@@ -1109,6 +1110,34 @@ while my_game == True:
                     if player.rect.x < 0:
                         player.rect.x = player.rect.x - player.speed_x
                 #End If
+                if keys[pygame.K_p]:
+                    pause = True
+                while pause == True:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pause = False
+                            all_level_game = False
+                            my_game = False
+                            endgame = True
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_RETURN:
+                                pause = False
+                            if event.key == pygame.K_ESCAPE:
+                                pause = False
+                                all_level_game = False
+                                intro = True
+                    screen.fill(BLACK)
+                    pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+                    font = pygame.font.SysFont('ComicSans', 100, True, False)
+                    text = font.render('Game Paused', True, WHITE)
+                    screen.blit(text, [220, 70])
+                    font = pygame.font.SysFont('ComicSans', 30, True, False)
+                    text = font.render('Press enter to return to the game', True, WHITE)
+                    screen.blit(text, [285, 330])
+                    text = font.render('Press escape to return to the home page', True, WHITE)
+                    screen.blit(text, [245, 360])
+                    pygame.display.flip()
+                    clock.tick(60)
                 player_brick_hit_list = pygame.sprite.spritecollide(player, brick_group, False)
                 for foo in player_brick_hit_list:
                     player.rect.x = player.old_x
@@ -1150,6 +1179,8 @@ while my_game == True:
                 screen.blit(text, [650, 40])
                 text = font.render('Apples: ' + str(player.apples) + ' / ' + str(apple_number), True, WHITE)
                 screen.blit(text, [650, 70])
+                text = font.render('Press p to pause', True, WHITE)
+                screen.blit(text, [650, 100])
                 # -- Draw here
                 # -- flip display to reveal new position of objects
                 pygame.display.flip()
@@ -1273,6 +1304,34 @@ while my_game == True:
             if player.rect.x < 0:
                 player.rect.x = player.rect.x - player.speed_x
         #End If
+        if keys[pygame.K_p]:
+            pause = True
+        while pause == True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pause = False
+                    in_game = False
+                    my_game = False
+                    endgame = True
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        pause = False
+                    if event.key == pygame.K_ESCAPE:
+                        pause = False
+                        in_game = False
+                        intro = True
+            screen.fill(BLACK)
+            pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+            font = pygame.font.SysFont('ComicSans', 100, True, False)
+            text = font.render('Game Paused', True, WHITE)
+            screen.blit(text, [220, 70])
+            font = pygame.font.SysFont('ComicSans', 30, True, False)
+            text = font.render('Press enter to return to the game', True, WHITE)
+            screen.blit(text, [285, 330])
+            text = font.render('Press escape to return to the home page', True, WHITE)
+            screen.blit(text, [245, 360])
+            pygame.display.flip()
+            clock.tick(60)
         player_brick_hit_list = pygame.sprite.spritecollide(player, brick_group, False)
         for foo in player_brick_hit_list:
             player.rect.x = player.old_x
@@ -1316,6 +1375,8 @@ while my_game == True:
         screen.blit(text, [650, 40])
         text = font.render('Apples: ' + str(player.apples) + ' / ' + str(apple_number), True, WHITE)
         screen.blit(text, [650, 70])
+        text = font.render('Press p to pause', True, WHITE)
+        screen.blit(text, [650, 100])
         # -- Draw here
         # -- flip display to reveal new position of objects
         pygame.display.flip()
@@ -1429,6 +1490,35 @@ while my_game == True:
                 endgame = True
             #End If
         #Next event
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_p]:
+            pause = True
+        while pause == True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pause = False
+                    demo_game = False
+                    my_game = False
+                    endgame = True
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        pause = False
+                    if event.key == pygame.K_ESCAPE:
+                        pause = False
+                        demo_game = False
+                        intro = True
+            screen.fill(BLACK)
+            pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+            font = pygame.font.SysFont('ComicSans', 100, True, False)
+            text = font.render('Game Paused', True, WHITE)
+            screen.blit(text, [220, 70])
+            font = pygame.font.SysFont('ComicSans', 30, True, False)
+            text = font.render('Press enter to return to the game', True, WHITE)
+            screen.blit(text, [285, 330])
+            text = font.render('Press escape to return to the home page', True, WHITE)
+            screen.blit(text, [245, 360])
+            pygame.display.flip()
+            clock.tick(60)
         # -- Game logic goes after this comment
         player.rect.x = player.rect.x + player.speed_x
         player.rect.y = player.rect.y + player.speed_y
@@ -1494,6 +1584,8 @@ while my_game == True:
         screen.blit(text, [650, 40])
         text = font.render('Apples: ' + str(player.apples) + ' / ' + str(apple_number), True, WHITE)
         screen.blit(text, [650, 70])
+        text = font.render('Press p to pause', True, WHITE)
+        screen.blit(text, [650, 100])
         # -- Draw here
         # -- flip display to reveal new position of objects
         pygame.display.flip()

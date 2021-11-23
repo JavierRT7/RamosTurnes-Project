@@ -1223,8 +1223,8 @@ while my_game == True:
                         no_player = True
                     elif apple_there == False:
                         no_apples = True
-                    elif Check(map) == False:
-                        no_apples = True
+                    #elif Check(map) == False:
+                     #   no_apples = True
                     else:
                         map_draw = False
                         mapping = True
@@ -1240,9 +1240,7 @@ while my_game == True:
                 elif event.type == pygame.KEYDOWN: # - a key is down
                     if event.key == pygame.K_RETURN:
                         is_player_there = False
-                        apple_there = False
                         no_player = False
-                        map_draw = True
                     if event.key == pygame.K_ESCAPE:
                         no_player = False
                         my_game = False
@@ -1261,8 +1259,6 @@ while my_game == True:
             screen.blit(text, [360, 360])
             # -- flip display to reveal new position of objects
             pygame.display.flip()
-            # - The clock ticks over
-            clock.tick(60)
         while no_apples == True:
             # -- User input and controls
             for event in pygame.event.get():
@@ -1272,10 +1268,8 @@ while my_game == True:
                     endgame = True
                 elif event.type == pygame.KEYDOWN: # - a key is down
                     if event.key == pygame.K_RETURN:
-                        is_player_there = False
                         apple_there = False
                         no_apples = False
-                        map_draw = True
                     if event.key == pygame.K_ESCAPE:
                         no_apples = False
                         my_game = False
@@ -1295,7 +1289,6 @@ while my_game == True:
             # -- flip display to reveal new position of objects
             pygame.display.flip()
             # - The clock ticks over
-            clock.tick(60)
         # -- Game logic goes after this comment
         # -- Screen background is BLACK
         screen.fill (WHITE)

@@ -859,6 +859,72 @@ while my_game == True:
                         mapping = True
                 #End If
         #Next event
+        while no_player == True:
+            # -- User input and controls
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    no_player = False
+                    my_game = False
+                    endgame = True
+                elif event.type == pygame.KEYDOWN: # - a key is down
+                    if event.key == pygame.K_RETURN:
+                        is_player_there = False
+                        apple_there = False
+                        no_player = False
+                        map_draw = True
+                    if event.key == pygame.K_ESCAPE:
+                        no_player = False
+                        my_game = False
+                        endgame = True
+                #End If
+            #Next event
+            screen.fill(BLACK)
+            pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+            font = pygame.font.SysFont('ComicSans', 100, True, False)
+            text = font.render('Place a Player!', True, WHITE)
+            screen.blit(text, [205, 70])
+            font = pygame.font.SysFont('ComicSans', 30, True, False)
+            text = font.render('Press enter to map drawing', True, WHITE)
+            screen.blit(text, [310, 330])
+            text = font.render('Press escape to quit', True, WHITE)
+            screen.blit(text, [360, 360])
+            # -- flip display to reveal new position of objects
+            pygame.display.flip()
+            # - The clock ticks over
+            clock.tick(60)
+        while no_apples == True:
+            # -- User input and controls
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    no_apples = False
+                    my_game = False
+                    endgame = True
+                elif event.type == pygame.KEYDOWN: # - a key is down
+                    if event.key == pygame.K_RETURN:
+                        is_player_there = False
+                        apple_there = False
+                        no_apples = False
+                        map_draw = True
+                    if event.key == pygame.K_ESCAPE:
+                        no_apples = False
+                        my_game = False
+                        endgame = True
+                #End If
+            #Next event
+            screen.fill(BLACK)
+            pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+            font = pygame.font.SysFont('ComicSans', 100, True, False)
+            text = font.render('Place an Apple!', True, WHITE)
+            screen.blit(text, [205, 70])
+            font = pygame.font.SysFont('ComicSans', 30, True, False)
+            text = font.render('Press enter to map drawing', True, WHITE)
+            screen.blit(text, [310, 330])
+            text = font.render('Press escape to quit', True, WHITE)
+            screen.blit(text, [360, 360])
+            # -- flip display to reveal new position of objects
+            pygame.display.flip()
+            # - The clock ticks over
+            clock.tick(60)
         # -- Game logic goes after this comment
         # -- Screen background is BLACK
         screen.fill (WHITE)
@@ -914,72 +980,6 @@ while my_game == True:
         # - The clock ticks over
         clock.tick(60)
     #End While - End of game loop
-    while no_player == True:
-        # -- User input and controls
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                no_player = False
-                my_game = False
-                endgame = True
-            elif event.type == pygame.KEYDOWN: # - a key is down
-                if event.key == pygame.K_RETURN:
-                    is_player_there = False
-                    apple_there = False
-                    no_player = False
-                    map_draw = True
-                if event.key == pygame.K_ESCAPE:
-                    no_player = False
-                    my_game = False
-                    endgame = True
-            #End If
-        #Next event
-        screen.fill(BLACK)
-        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
-        font = pygame.font.SysFont('ComicSans', 100, True, False)
-        text = font.render('Place a Player!', True, WHITE)
-        screen.blit(text, [205, 70])
-        font = pygame.font.SysFont('ComicSans', 30, True, False)
-        text = font.render('Press enter to map drawing', True, WHITE)
-        screen.blit(text, [310, 330])
-        text = font.render('Press escape to quit', True, WHITE)
-        screen.blit(text, [360, 360])
-        # -- flip display to reveal new position of objects
-        pygame.display.flip()
-        # - The clock ticks over
-        clock.tick(60)
-    while no_apples == True:
-        # -- User input and controls
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                no_apples = False
-                my_game = False
-                endgame = True
-            elif event.type == pygame.KEYDOWN: # - a key is down
-                if event.key == pygame.K_RETURN:
-                    is_player_there = False
-                    apple_there = False
-                    no_apples = False
-                    map_draw = True
-                if event.key == pygame.K_ESCAPE:
-                    no_apples = False
-                    my_game = False
-                    endgame = True
-            #End If
-        #Next event
-        screen.fill(BLACK)
-        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
-        font = pygame.font.SysFont('ComicSans', 100, True, False)
-        text = font.render('Place an Apple!', True, WHITE)
-        screen.blit(text, [205, 70])
-        font = pygame.font.SysFont('ComicSans', 30, True, False)
-        text = font.render('Press enter to map drawing', True, WHITE)
-        screen.blit(text, [310, 330])
-        text = font.render('Press escape to quit', True, WHITE)
-        screen.blit(text, [360, 360])
-        # -- flip display to reveal new position of objects
-        pygame.display.flip()
-        # - The clock ticks over
-        clock.tick(60)
     if all_levels == True:
         for counter in range(1, 10):
             if counter == 1:

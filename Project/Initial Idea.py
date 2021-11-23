@@ -1595,6 +1595,7 @@ while my_game == True:
             total_score = total_score + score
             apple_number = 0
     while mapping == True:
+        print(map)
         for y in range(12):
             for x in range(16):
                 map_block = Map_Block(WHITE, 40, 40, x*40, y *40)

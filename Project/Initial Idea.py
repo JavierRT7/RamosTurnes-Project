@@ -564,6 +564,67 @@ level10 = [[5, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 4],
 [4, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0], 
 [2, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 3], 
 [4, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0]]
+def Check(map):
+    apples_x = []
+    apples_y = []
+    for y in range(12):
+        for x in range(16):
+            if map[x][y] == 5:
+                player_x = x
+                player_y = y
+            #End If
+        #Next
+    #Next
+    for y in range(12):
+        for x in range(16):
+            if map[x][y] == 4:
+                apples_x.append(x)
+                apples_y.append(y)
+            #End If
+        #Next
+    #Next  
+    for count in range(len(apples_x)):
+        for y in range(12):
+            for x in range(16):
+                if map[x][y] == 7:
+                    map[x][y] = 0
+                #End If
+            #Next
+        #Next  
+        found = False
+        fail = False
+        current_x = player_x
+        current_y = player_y
+        last_x = player_x
+        last_y = player_y
+        map[current_x][current_y] = 7
+        while found == False and fail == False:
+            while apples_x[count] > current_x and apples_y[count] > current_y:
+                if map[current_x][current_y + 1] == 4:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6:
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6:
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6:
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6:
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+#End Function
 while my_game == True:
     map = [[0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],

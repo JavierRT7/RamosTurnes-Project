@@ -1,5 +1,6 @@
 import pygame
 import random
+import copy
 # -- Global Constants
 # -- Colours
 BLACK = (0,0,0)
@@ -923,13 +924,10 @@ def Check(map):
                 #End If
             #End If
             counter = counter + 1
-            print(current_x)
-            print(current_y)
             if counter == 1000 and found == False:
                 fail = True
             #End If
         #End While
-        print("next")
     #Next
     valid = True
     for i in range(len(apples_x)):
@@ -941,6 +939,22 @@ def Check(map):
 #End Function
 while my_game == True:
     map = [[0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],]
+    dummy_map = [[0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
@@ -1224,11 +1238,12 @@ while my_game == True:
                     all_sprites_group.add(monster)
                     map[selector_top.pos_x][selector_top.pos_y] = 6
                 if event.key == pygame.K_RETURN:
+                    dummy_map = copy.deepcopy(map)
                     if is_player_there == False:
                         no_player = True
                     elif apple_there == False:
                         no_apples = True
-                    elif Check(map) == False:
+                    elif Check(dummy_map) == False:
                         invalid_map = True
                     else:
                         map_draw = False
@@ -1595,7 +1610,6 @@ while my_game == True:
             total_score = total_score + score
             apple_number = 0
     while mapping == True:
-        print(map)
         for y in range(12):
             for x in range(16):
                 map_block = Map_Block(WHITE, 40, 40, x*40, y *40)

@@ -404,6 +404,7 @@ demo_end = False
 no_player = False
 no_apples = False
 pause = False
+invalid_map = False
 level1 = [[5, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6], 
 [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 [0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], 
@@ -922,6 +923,8 @@ def Check(map):
                 #End If
             #End If
             counter = counter + 1
+            print(current_x)
+            print(current_y)
             if counter == 1000 and found == False:
                 fail = True
             #End If
@@ -1224,13 +1227,41 @@ while my_game == True:
                         no_player = True
                     elif apple_there == False:
                         no_apples = True
-                    #elif Check(map) == False:
-                     #   no_apples = True
+                    elif Check(map) == False:
+                        invalid_map = True
                     else:
                         map_draw = False
                         mapping = True
                 #End If
         #Next event
+        while invalid_map == True:
+            # -- User input and controls
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    invalid_map = False
+                    my_game = False
+                    endgame = True
+                elif event.type == pygame.KEYDOWN: # - a key is down
+                    if event.key == pygame.K_RETURN:
+                        invalid_map = False
+                    if event.key == pygame.K_ESCAPE:
+                        invalid_map = False
+                        my_game = False
+                        endgame = True
+                #End If
+            #Next event
+            screen.fill(BLACK)
+            pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+            font = pygame.font.SysFont('ComicSans', 100, True, False)
+            text = font.render('Invalid Map!', True, WHITE)
+            screen.blit(text, [205, 70])
+            font = pygame.font.SysFont('ComicSans', 30, True, False)
+            text = font.render('Press enter to map drawing', True, WHITE)
+            screen.blit(text, [310, 330])
+            text = font.render('Press escape to quit', True, WHITE)
+            screen.blit(text, [360, 360])
+            # -- flip display to reveal new position of objects
+            pygame.display.flip()
         while no_player == True:
             # -- User input and controls
             for event in pygame.event.get():

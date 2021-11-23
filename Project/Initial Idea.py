@@ -976,6 +976,7 @@ while my_game == True:
     all_level_mapping = False
     all_level_game = False
     apple_there = False
+    is_player_there = False
     total_score = 0
     score = 0
     level_demo = random.randint(1, 10)

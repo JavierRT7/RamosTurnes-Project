@@ -601,7 +601,7 @@ def Check(map):
         last_y = player_y
         map[current_x][current_y] = 7
         while found == False and fail == False:
-            if apples_x[count] > current_x and apples_y[count] > current_y:
+            if apples_x[count] >= current_x and apples_y[count] >= current_y:
                 if current_x == apples_x[count] and current_y + 1 == apples_y[count]:
                     apples_x[count] = 400
                     apples_y[count] = 400
@@ -681,7 +681,7 @@ def Check(map):
                 else:
                     fail = True
                 #End If
-            elif apples_x[count] > current_x and apples_y[count] < current_y:
+            elif apples_x[count] >= current_x and apples_y[count] < current_y:
                 if current_x == apples_x[count] and current_y - 1 == apples_y[count]:
                     apples_x[count] = 400
                     apples_y[count] = 400
@@ -761,7 +761,7 @@ def Check(map):
                 else:
                     fail = True
                 #End If
-            elif apples_x[count] < current_x and apples_y[count] > current_y:
+            elif apples_x[count] < current_x and apples_y[count] >= current_y:
                 if current_x == apples_x[count] and current_y + 1 == apples_y[count]:
                     apples_x[count] = 400
                     apples_y[count] = 400
@@ -929,6 +929,7 @@ def Check(map):
                 fail = True
             #End If
         #End While
+        print("next")
     #Next
     valid = True
     for i in range(len(apples_x)):
@@ -1246,6 +1247,7 @@ while my_game == True:
                         invalid_map = False
                     if event.key == pygame.K_ESCAPE:
                         invalid_map = False
+                        map_draw = False
                         my_game = False
                         endgame = True
                 #End If
@@ -1275,6 +1277,7 @@ while my_game == True:
                         no_player = False
                     if event.key == pygame.K_ESCAPE:
                         no_player = False
+                        map_draw = False
                         my_game = False
                         endgame = True
                 #End If
@@ -1304,6 +1307,7 @@ while my_game == True:
                         no_apples = False
                     if event.key == pygame.K_ESCAPE:
                         no_apples = False
+                        map_draw = False
                         my_game = False
                         endgame = True
                 #End If

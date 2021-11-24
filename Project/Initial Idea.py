@@ -924,7 +924,7 @@ def Check(map):
                 #End If
             #End If
             counter = counter + 1
-            if counter == 1000 and found == False:
+            if counter == 100000000000 and found == False:
                 fail = True
             #End If
         #End While

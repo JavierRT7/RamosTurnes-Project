@@ -1340,6 +1340,24 @@ def Check(map):
             if counter == 100000000000 and found == False:
                 fail = True
             #End If
+            selector_left.rect.y = (current_y * 40)
+            selector_right.rect.y = (current_y * 40)
+            selector_top.rect.y = (current_y * 40)
+            selector_bottom.rect.y = (current_y * 40) + 40
+            selector_left.rect.x = (current_x * 40)
+            selector_right.rect.x = (current_x * 40) + 40
+            selector_top.rect.x = (current_x * 40)
+            selector_bottom.rect.x = (current_x * 40)
+            screen.fill(WHITE)
+            draw_sprites_group.draw(screen)
+            selector_sprites_group.draw(screen)
+            print(current_x)
+            print(current_y)
+            # -- Draw here
+            # -- flip display to reveal new position of objects
+            pygame.display.flip()
+            # - The clock ticks over
+            clock.tick(60)
         #End While
     #Next
     valid = True

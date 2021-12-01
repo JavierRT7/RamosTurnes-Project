@@ -585,6 +585,13 @@ def Check(map):
         #Next
     #Next  
     for count in range(len(apples_x)):
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+        font = pygame.font.SysFont('ComicSans', 100, True, False)
+        text = font.render('Checking Map', True, WHITE)
+        screen.blit(text, [205, 70])
+        # -- flip display to reveal new position of objects
+        pygame.display.flip()
         for y in range(12):
             for x in range(16):
                 if map[x][y] == 7:
@@ -1677,8 +1684,6 @@ def Check(map):
                 fail = True
             #End If
         #End While
-        # -- flip display to reveal new position of objects
-        pygame.display.flip()
     #Next
     valid = True
     for i in range(len(apples_x)):

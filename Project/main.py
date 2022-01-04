@@ -594,8 +594,10 @@ def Check(map):
         pygame.display.flip()
         for y in range(12):
             for x in range(16):
-                if map[x][y] == 7:
+                if map[x][y] > 2 or map[x][y] == 3 or map[x][y] == 6 or map[x][y] == 4:
                     map[x][y] = 0
+                if map[x][y] == 2:
+                    map[x][y] == 1
                 #End If
             #Next
         #Next  
@@ -606,8 +608,13 @@ def Check(map):
         current_y = player_y
         last_x = player_x
         last_y = player_y
+        left = False
+        right = False
+        up = False
+        down = False
         map[current_x][current_y] = 7
         while found == False and fail == False:
+            j = 0
             if counter == 1000:
                 for count in range(len(apples_x)):
                     for y in range(12):
@@ -632,52 +639,27 @@ def Check(map):
                 if r == 3 and current_y - 1 > -1 and map[current_x][current_y - 1] != 1 and map[current_x][current_y - 1] != 2:
                     current_y = current_y - 1
                 #End If
-                if current_x == apples_x[count] and current_y == apples_y[count]:
-                    apples_x[count] = 400
-                    apples_y[count] = 400
-                    found = True
             elif current_x == 0 and current_y == 0:
-                if current_x == apples_x[count] and current_y + 1 == apples_y[count]:
-                    apples_x[count] = 400
-                    apples_y[count] = 400
-                    found = True
-                elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
-                    apples_x[count] = 400
-                    apples_y[count] = 400
-                    found = True
-                elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6 or map[current_x][current_y + 1] == 4:
-                    current_y = current_y + 1
-                    map[current_x][current_y] = 7
-                    last_x = current_x
-                    last_y = current_y - 1
-                elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6 or map[current_x + 1][current_y] == 4:
-                    current_x = current_x + 1
-                    map[current_x][current_y] = 7
-                    last_x = current_x - 1
-                    last_y = current_y
-                elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
-                    current_y = current_y + 1
-                    map[current_x][current_y] = 7
-                    last_x = current_x
-                    last_y = current_y - 1
-                elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
-                    current_x = current_x + 1
-                    map[current_x][current_y] = 7
-                    last_x = current_x - 1
-                    last_y = current_y
-                elif map[current_x][current_y + 1] == 7:
-                    current_y = current_y + 1
-                    map[current_x][current_y] = 7
-                    last_x = current_x
-                    last_y = current_y - 1
-                elif map[current_x + 1][current_y] == 7:
-                    current_x = current_x + 1
-                    map[current_x][current_y] = 7
-                    last_x = current_x - 1
-                    last_y = current_y
-                else:
-                    fail = True
-                #End If
+                while right == False and up == False:
+                    if map[current_x][current_y + 1] == j:
+                        up = True
+                    elif map[current_x + 1][current_y] == j:
+                        right = True
+                    j = j + 1
+                    #End If
+                #Endwhile
+                if up == True:
+                    if map[current_x][current_y] > 1:
+                        for y in range(12):
+                            for x in range(16):
+                                if map[x][y] > map[current_x][current_y]:
+                                    map[x][y] = map[x][y] - 1 
+                            #Next
+                        #Next  
+                    maxes = []
+                    for n in range(16):
+                        maxes.append(max(level10[n]))
+                    map[current_x][current_y] = max(maxes) + 1
             elif current_x == 0 and current_y == 11:
                 if current_x == apples_x[count] and current_y - 1 == apples_y[count]:
                     apples_x[count] = 400
@@ -1691,8 +1673,12 @@ def Check(map):
                         fail = True
                     #End If
             #End If
+            if current_x == apples_x[count] and current_y == apples_y[count]:
+                apples_x[count] = 400
+                apples_y[count] = 400
+                found = True
             counter = counter + 1
-            if counter == 1000000 and found == False:
+            if counter == 10000 and found == False:
                 fail = True
             #End If
             #selector_left.rect.y = (current_y * 40)

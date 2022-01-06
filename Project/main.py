@@ -1640,6 +1640,7 @@ while my_game == True:
     total_score = 0
     score = 0
     level_demo = random.randint(1, 10)
+    apples = 0
     # -- Manages how fast screen refreshes
     clock = pygame.time.Clock()
     ### -- Game Loop
@@ -1846,6 +1847,15 @@ while my_game == True:
                         selector_top.rect.y = selector_top.rect.y + 40
                         selector_bottom.rect.y = selector_bottom.rect.y + 40
                         selector_top.pos_y = selector_top.pos_y + 1
+                if event.key == pygame.K_BACKSPACE:
+                    map_block = Map_Block(WHITE, 40, 40, selector_left.rect.x, selector_top.rect.y)
+                    draw_sprites_group.add(map_block)
+                    all_sprites_group.add(map_block)
+                    if map[selector_top.pos_x][selector_top.pos_y] == 5:
+                        is_player_there = False
+                    if map[selector_top.pos_x][selector_top.pos_y] == 4:
+                        apples = apples - 1
+                    map[selector_top.pos_x][selector_top.pos_y] = 0
                 if event.key == pygame.K_1:
                     brick = Brick(selector_left.rect.x, selector_top.rect.y)
                     draw_sprites_group.add(brick)
@@ -1866,7 +1876,7 @@ while my_game == True:
                     draw_sprites_group.add(apple)
                     all_sprites_group.add(apple)
                     map[selector_top.pos_x][selector_top.pos_y] = 4
-                    apple_there = True
+                    apples = apples + 1
                 if event.key == pygame.K_5:
                     if is_player_there == False:
                         player = Player(selector_left.rect.x + 5, selector_top.rect.y + 5, 0, 0, 0, 0)
@@ -1881,6 +1891,10 @@ while my_game == True:
                     map[selector_top.pos_x][selector_top.pos_y] = 6
                 if event.key == pygame.K_RETURN:
                     dummy_map = copy.deepcopy(map)
+                    if apples == 0:
+                        apple_there = False
+                    else:
+                        apple_there = True
                     if is_player_there == False:
                         no_player = True
                     elif apple_there == False:
@@ -1913,7 +1927,7 @@ while my_game == True:
             pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
             font = pygame.font.SysFont('ComicSans', 100, True, False)
             text = font.render('Invalid Map!', True, WHITE)
-            screen.blit(text, [205, 70])
+            screen.blit(text, [245, 70])
             font = pygame.font.SysFont('ComicSans', 30, True, False)
             text = font.render('Press enter to map drawing', True, WHITE)
             screen.blit(text, [310, 330])
@@ -1985,6 +1999,8 @@ while my_game == True:
         # -- Game logic goes after this comment
         # -- Screen background is BLACK
         screen.fill (WHITE)
+        draw_sprites_group.draw(screen)
+        selector_sprites_group.draw(screen)
         pygame.draw.rect(screen, BLACK, (40, 0, 1, 480))
         pygame.draw.rect(screen, BLACK, (80, 0, 1, 480))
         pygame.draw.rect(screen, BLACK, (120, 0, 1, 480))
@@ -2027,10 +2043,10 @@ while my_game == True:
         screen.blit(text, [650, 130])
         text = font.render('Press 6 to place a monster', True, WHITE)
         screen.blit(text, [650, 160])
-        text = font.render('Press enter to start the game', True, WHITE)
+        text = font.render('Press backspace to clear', True, WHITE)
         screen.blit(text, [650, 190])
-        draw_sprites_group.draw(screen)
-        selector_sprites_group.draw(screen)
+        text = font.render('Press enter to start the game', True, WHITE)
+        screen.blit(text, [650, 220])
         # -- Draw here
         # -- flip display to reveal new position of objects
         pygame.display.flip()

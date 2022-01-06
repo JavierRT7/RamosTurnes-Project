@@ -1847,6 +1847,17 @@ while my_game == True:
                         selector_top.rect.y = selector_top.rect.y + 40
                         selector_bottom.rect.y = selector_bottom.rect.y + 40
                         selector_top.pos_y = selector_top.pos_y + 1
+                if event.key == pygame.K_DELETE:
+                    for sprite in draw_sprites_group:
+                        sprite.kill()
+                    for y in range(12):
+                        for x in range(16):
+                            map[x][y] = 0
+                            #End If
+                        #Next
+                    #Next
+                    is_player_there = False
+                    apples = 0
                 if event.key == pygame.K_BACKSPACE:
                     map_block = Map_Block(WHITE, 40, 40, selector_left.rect.x, selector_top.rect.y)
                     draw_sprites_group.add(map_block)
@@ -2031,22 +2042,26 @@ while my_game == True:
         pygame.draw.rect(screen, BLACK, (0, 480, 640, 1))
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
         font = pygame.font.SysFont('ComicSans', 30, True, False)
-        text = font.render('Press 1 to place a wall', True, WHITE)
+        text = font.render('Press:', True, WHITE)
         screen.blit(text, [650, 10])
-        text = font.render('Press 2 to place a window', True, WHITE)
+        text = font.render('1 to place a wall', True, WHITE)
         screen.blit(text, [650, 40])
-        text = font.render('Press 3 to place a door', True, WHITE)
+        text = font.render('2 to place a window', True, WHITE)
         screen.blit(text, [650, 70])
-        text = font.render('Press 4 to place an apple', True, WHITE)
+        text = font.render('3 to place a door', True, WHITE)
         screen.blit(text, [650, 100])
-        text = font.render('Press 5 to place your player', True, WHITE)
+        text = font.render('4 to place an apple', True, WHITE)
         screen.blit(text, [650, 130])
-        text = font.render('Press 6 to place a monster', True, WHITE)
+        text = font.render('5 to place your player', True, WHITE)
         screen.blit(text, [650, 160])
-        text = font.render('Press backspace to clear', True, WHITE)
+        text = font.render('6 to place a monster', True, WHITE)
         screen.blit(text, [650, 190])
-        text = font.render('Press enter to start the game', True, WHITE)
+        text = font.render('Backspace to clear square', True, WHITE)
         screen.blit(text, [650, 220])
+        text = font.render('Delete to clear map', True, WHITE)
+        screen.blit(text, [650, 250])
+        text = font.render('Enter to start the game', True, WHITE)
+        screen.blit(text, [650, 280])
         # -- Draw here
         # -- flip display to reveal new position of objects
         pygame.display.flip()

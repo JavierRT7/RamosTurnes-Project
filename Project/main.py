@@ -1,7 +1,7 @@
 import pygame
 import random
 import copy
-# -- Global Constants
+
 # -- Colours
 BLACK = (0,0,0)
 WHITE = (255,255,255)
@@ -9,22 +9,27 @@ BLUE = (50,50,255)
 YELLOW = (255,255,0)
 BROWN = (155,103,60)
 GREY = (140, 143, 141)
+
 # -- Initialise PyGame
 pygame.init()
+
 # -- Blank Screen
 size = (1000,480)
 screen = pygame.display.set_mode(size)
+
 # -- Title of new window/screen
 pygame.display.set_caption("My Project")
+
 #Classes
 class Player(pygame.sprite.Sprite):
+    # Define the constructor for player
     def __init__(self, x_ref, y_ref, speed_x, speed_y, health, apples):
         # Call the sprite constructor
         super().__init__()
-        # Create a sprite and fill it with colour
+        # Create a sprite and load image
         self.image = pygame.image.load('player4.png')
         self.rect = self.image.get_rect()
-        # Set the position of the player attributes
+        # Set the player attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
         self.speed_x = speed_x
@@ -34,25 +39,35 @@ class Player(pygame.sprite.Sprite):
         self.health = health
         self.apples = apples
     #End Procedure
+    # Update Function
     def update(self):
         self.old_x = self.rect.x
         self.old_y = self.rect.y
+    #End Procedure
 #End Class
+
 class Monster_Draw(pygame.sprite.Sprite):
     def __init__(self, x_ref, y_ref):
+        # Call the sprite constructor
         super().__init__()
+        # Create a sprite and load image
         self.image = pygame.image.load('monster.png')
         self.rect = self.image.get_rect()
+        # Set sprite attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
+    #End Procedure
+#End Class
+
 class Monster(pygame.sprite.Sprite):
+    # Define the constructor for monster
     def __init__(self, x_ref, y_ref, old_x, old_y):
         # Call the sprite constructor
         super().__init__()
-        # Create a sprite and fill it with colour
+        # Create a sprite and load image
         self.image = pygame.image.load('monster.png')
         self.rect = self.image.get_rect()
-        # Set the position of the player attributes
+        # Set the monster attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
         self.speed_x = random.randint(-2, 2)
@@ -60,13 +75,17 @@ class Monster(pygame.sprite.Sprite):
         self.old_x = self.rect.x
         self.old_y = self.rect.y
     #End Procedure
+    # Update Function
     def update(self):
+        # Set movement
         self.rect.x = self.rect.x + self.speed_x
         self.rect.y = self.rect.y + self.speed_y
+        # Check for collisions
         monster_brick_hit_list = pygame.sprite.spritecollide(self, brick_group, False)
         monster_window_hit_list = pygame.sprite.spritecollide(self, window_group, False)
         monster_door_hit_list = pygame.sprite.spritecollide(self, closed_door_group, False)
         monster_player_hit_list = pygame.sprite.spritecollide(self, player_sprites_group, False)
+        # Act on sprite collisions
         if demo_game == True:
             for foo in monster_player_hit_list:
                 player.rect.x = player.old_x
@@ -78,6 +97,7 @@ class Monster(pygame.sprite.Sprite):
                 player.speed_y = random.randint(-2, 2)
                 self.speed_x = random.randint(-2, 2)
                 self.speed_y = random.randint(-2, 2)
+            #Next
         else:
             for foo in monster_player_hit_list:
                 player.health = player.health - 1
@@ -89,6 +109,8 @@ class Monster(pygame.sprite.Sprite):
                 player.speed_y = 0
                 player.rect.x = player.old_x
                 player.rect.y = player.old_y
+            #Next
+        #End If
         monster_group.remove(self)
         monster_monster_hit_list = pygame.sprite.spritecollide(self, monster_group, False)
         for foo in monster_monster_hit_list:
@@ -105,6 +127,7 @@ class Monster(pygame.sprite.Sprite):
             self.rect.y = self.old_y
             self.speed_x = random.randint(-2, 2)
             self.speed_y = random.randint(-2, 2)
+        #Next
         for foo in monster_window_hit_list:
             self.speed_x = 0
             self.speed_y = 0
@@ -112,6 +135,7 @@ class Monster(pygame.sprite.Sprite):
             self.rect.y = self.old_y
             self.speed_x = random.randint(-2, 2)
             self.speed_y = random.randint(-2, 2)
+        #Next
         for foo in monster_door_hit_list:
             self.speed_x = 0
             self.speed_y = 0
@@ -119,6 +143,7 @@ class Monster(pygame.sprite.Sprite):
             self.rect.y = self.old_y
             self.speed_x = random.randint(-2, 2)
             self.speed_y = random.randint(-2, 2)
+        #Next
         if self.rect.x > 610:
             self.speed_x = 0
             self.speed_y = 0
@@ -126,6 +151,8 @@ class Monster(pygame.sprite.Sprite):
             self.rect.y = self.old_y
             self.speed_x = random.randint(-3, 3)
             self.speed_y = random.randint(-3, 3)
+        #Next
+        # Act on edge of screen collisions
         if self.rect.x < 0:
             self.speed_x = 0
             self.speed_y = 0
@@ -133,6 +160,7 @@ class Monster(pygame.sprite.Sprite):
             self.rect.y = self.old_y
             self.speed_x = random.randint(-2, 2)
             self.speed_y = random.randint(-2, 2)
+        #End If
         if self.rect.y > 450:
             self.speed_x = 0
             self.speed_y = 0
@@ -140,6 +168,7 @@ class Monster(pygame.sprite.Sprite):
             self.rect.y = self.old_y
             self.speed_x = random.randint(-2, 2)
             self.speed_y = random.randint(-2, 2)
+        #End If
         if self.rect.y < 0:
             self.speed_x = 0
             self.speed_y = 0
@@ -147,30 +176,44 @@ class Monster(pygame.sprite.Sprite):
             self.rect.y = self.old_y
             self.speed_x = random.randint(-2, 2)
             self.speed_y = random.randint(-2, 2)
+        #End If
         if self.speed_x == 0 and self.speed_y == 0:
             self.speed_x = random.randint(-2, 2)
             self.speed_y = random.randint(-2, 2)
+        #End If
         self.old_x = self.rect.x
         self.old_y = self.rect.y
+        # Player's visual impairement
         if self.rect.x - 150 > player.rect.x or self.rect.x + 150 < player.rect.x or self.rect.y - 150 > player.rect.y or self.rect.y + 150 < player.rect.y:
             drawing_group.remove(self)
         else:
             drawing_group.add(self)
+        #End If
         for sprite in brick_left_group:
             if self.rect.x < sprite.rect.x:
                 drawing_group.remove(self)
+            #End If
+        #Next
         for sprite in brick_right_group:
             if self.rect.x > sprite.rect.x:
                 drawing_group.remove(self)
+            #End If
+        #Next
         for sprite in brick_up_group:
             if self.rect.y > sprite.rect.y:
                 drawing_group.remove(self)
+            #End If
+        #Next
         for sprite in brick_down_group:
             if self.rect.y < sprite.rect.y:
                 drawing_group.remove(self)
+            #End If
+        #Next
+    #End Procedure
 #End Class
+
 class Map_Block(pygame.sprite.Sprite):
-    # Define the constructor for invader
+    # Define the constructor for map block
     def __init__(self, color, width, height, x_ref, y_ref):
         # Call the sprite constructor
         super().__init__()
@@ -178,42 +221,57 @@ class Map_Block(pygame.sprite.Sprite):
         self.image = pygame.Surface([width,height])
         self.image.fill(color)
         self.rect = self.image.get_rect()
-        # Set the position of the player attributes
+        # Set the position of the map block attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
     #End Procedure  
+    # Update Function
     def update(self):
         self.image.fill(WHITE)
+        # Player's visual impairement
         if self.rect.x - 150 > player.rect.x or self.rect.x + 150 < player.rect.x or self.rect.y - 150 > player.rect.y or self.rect.y + 150 < player.rect.y:
             self.image.fill(GREY)
         else:
             self.image.fill(WHITE)  
+        #End If
         for sprite in brick_left_group:
             if self.rect.x < sprite.rect.x:
                 self.image.fill(GREY)
+            #End If
+        #Next
         for sprite in brick_right_group:
             if self.rect.x > sprite.rect.x:
                 self.image.fill(GREY)
+            #End If
+        #Next
         for sprite in brick_up_group:
             if self.rect.y > sprite.rect.y:
                 self.image.fill(GREY)
+            #End If
+        #Next
         for sprite in brick_down_group:
             if self.rect.y < sprite.rect.y:
                 self.image.fill(GREY)
+            #End If
+        #Next
+    #End Procedure
 #End Class
+
 class Brick(pygame.sprite.Sprite):
-    # Define the constructor for invader
+    # Define the constructor for brick
     def __init__(self, x_ref, y_ref):
         # Call the sprite constructor
         super().__init__()
-        # Create a sprite and fill it with colour
+        # Create a sprite and load image
         self.image = pygame.image.load('Brick.jpg')
         self.rect = self.image.get_rect()
-        # Set the position of the player attributes
+        # Set the position of the brick attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
     #End Procedure
+    # Update Function
     def update(self):
+        # Player's visual impairement
         brick_left_group.remove(self)
         brick_right_group.remove(self)
         brick_up_group.remove(self)
@@ -226,28 +284,38 @@ class Brick(pygame.sprite.Sprite):
             brick_up_group.add(self)
         elif self.rect.y < player.rect.y and self.rect.y + 150 > player.rect.y and (self.rect.x > player.rect.x - 40 and self.rect.x < player.rect.x + 40):
             brick_down_group.add(self)
+        #End If
+    #End Procedure
 #End Class
+
 class Door(pygame.sprite.Sprite):
-    # Define the constructor for invader
+    # Define the constructor for door
     def __init__(self, x_ref, y_ref, state):
         # Call the sprite constructor
         super().__init__()
-        # Create a sprite and fill it with colour
+        # Create a sprite and load image
         self.image = pygame.image.load('door.png')
         self.rect = self.image.get_rect()
-        # Set the position of the player attributes
+        # Set the door attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
         self.state = state
     #End Procedure
+    # Update Function
     def update(self):
+        # Detect collisions with player
         player_door_hit_list = pygame.sprite.spritecollide(self, player_sprites_group, False)
+        # Act on collisions with player
         if demo_game == True:
+            # Door will open when player collides with it
             for foo in player_door_hit_list:
                 if self.state == True:
                     self.state = False
                     self.image = pygame.image.load('opendoor2.png')
+                #End If
+            #Next
         else:
+            # Door will open if player collides with it and the user presses 1
             for foo in player_door_hit_list:
                 if self.state == True:
                     player.rect.x = player.old_x
@@ -263,6 +331,8 @@ class Door(pygame.sprite.Sprite):
                     #End If
                 #End If
             #Next
+        #End If
+        # Player's visual impairement
         if self.state == False:
             brick_left_group.remove(self)
             brick_right_group.remove(self)
@@ -276,8 +346,13 @@ class Door(pygame.sprite.Sprite):
                 brick_up_group.add(self)
             elif self.rect.y < player.rect.y and self.rect.y + 150 > player.rect.y and (self.rect.x > player.rect.x - 40 and self.rect.x < player.rect.x + 40):
                 brick_down_group.add(self)
+            #End If
+        #End If
+    #End Procedure
 #End Class
+
 class Selector_Left(pygame.sprite.Sprite):
+    # Define the constructor for selector left
     def __init__(self, x_ref, y_ref):
         # Call the sprite constructor
         super().__init__()
@@ -285,13 +360,14 @@ class Selector_Left(pygame.sprite.Sprite):
         self.image = pygame.Surface([5,40])
         self.image.fill(BLACK)
         self.rect = self.image.get_rect()
-        # Set the position of the player attributes
+        # Set the position of the selector left attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
     #End Procedure
 #End Class
+
 class Selector_Right(pygame.sprite.Sprite):
-    # Define the constructor for invader
+    # Define the constructor for selector right
     def __init__(self, x_ref, y_ref):
         # Call the sprite constructor
         super().__init__()
@@ -299,13 +375,14 @@ class Selector_Right(pygame.sprite.Sprite):
         self.image = pygame.Surface([5,40])
         self.image.fill(BLACK)
         self.rect = self.image.get_rect()
-        # Set the position of the player attributes
+        # Set the position of the selector right attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
     #End Procedure
 #End Class
+
 class Selector_Top(pygame.sprite.Sprite):
-    # Define the constructor for invader
+    # Define the constructor for selector top
     def __init__(self, x_ref, y_ref, pos_x, pos_y):
         # Call the sprite constructor
         super().__init__()
@@ -313,15 +390,16 @@ class Selector_Top(pygame.sprite.Sprite):
         self.image = pygame.Surface([40,5])
         self.image.fill(BLACK)
         self.rect = self.image.get_rect()
-        # Set the position of the player attributes
+        # Set the position of the selector top attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
         self.pos_x = pos_x
         self.pos_y = pos_y
     #End Procedure
 #End Class
+
 class Selector_Bottom(pygame.sprite.Sprite):
-    # Define the constructor for invader
+    # Define the constructor for selector bottom
     def __init__(self, x_ref, y_ref):
         # Call the sprite constructor
         super().__init__()
@@ -329,62 +407,84 @@ class Selector_Bottom(pygame.sprite.Sprite):
         self.image = pygame.Surface([40,5])
         self.image.fill(BLACK)
         self.rect = self.image.get_rect()
-        # Set the position of the player attributes
+        # Set the position of the selector bottom attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
     #End Procedure
 #End Class
+
 class Window(pygame.sprite.Sprite):
-    # Define the constructor for invader
+    # Define the constructor for window
     def __init__(self, x_ref, y_ref):
         # Call the sprite constructor
         super().__init__()
-        # Create a sprite and fill it with colour
+        # Create a sprite and load image
         self.image = pygame.image.load('window.png')
         self.rect = self.image.get_rect()
-        # Set the position of the player attributes
+        # Set the position of the window attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
     #End Procedure
 #End Class
+
 class Apple(pygame.sprite.Sprite):
-    # Define the constructor for invader
+    # Define the constructor for apple
     def __init__(self, x_ref, y_ref):
         # Call the sprite constructor
         super().__init__()
-        # Create a sprite and fill it with colour
+        # Create a sprite and load image
         self.image = pygame.image.load('apple.png')
         self.rect = self.image.get_rect()
-        # Set the position of the player attributes
+        # Set the position of the apple attributes
         self.rect.x = x_ref
         self.rect.y = y_ref
     #End Procedure
+    # Update Function
     def update(self):
         death = False
+        # Detect collisions with player
         player_apple_hit_list = pygame.sprite.spritecollide(self, player_sprites_group, False)
+        # Act on collisions with player
         for foo in player_apple_hit_list:
             drawing_group.remove(self)
             self.kill()
             player.apples = player.apples + 1
             death = True
+        #Next
+        # Player's visual impairement
         if death == False:
             if self.rect.x - 150 > player.rect.x or self.rect.x + 150 < player.rect.x or self.rect.y - 150 > player.rect.y or self.rect.y + 150 < player.rect.y:
                 drawing_group.remove(self)
             else:
                 drawing_group.add(self)
+            #End If
             for sprite in brick_left_group:
                 if self.rect.x < sprite.rect.x:
                     drawing_group.remove(self)
+                #End If
+            #Next
             for sprite in brick_right_group:
                 if self.rect.x > sprite.rect.x:
                     drawing_group.remove(self)
+                #End If
+            #Next
             for sprite in brick_up_group:
                 if self.rect.y > sprite.rect.y:
                     drawing_group.remove(self)
+                #End If
+            #Next
             for sprite in brick_down_group:
                 if self.rect.y < sprite.rect.y:
                     drawing_group.remove(self)
-# -- Exit game flag set to false
+                #End If
+            #Next
+        #End If
+    #End Procedure
+#End Class
+
+#End Classes
+
+#Globals/Loop Names
 my_game = True
 intro = True
 map_draw = False
@@ -405,6 +505,8 @@ no_player = False
 no_apples = False
 pause = False
 invalid_map = False
+
+#Levels
 level1 = [[5, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6], 
 [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 [0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], 
@@ -565,7 +667,11 @@ level10 = [[5, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 4],
 [4, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0], 
 [2, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 3], 
 [4, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0]]
+
+#Check Function
 def Check(map):
+
+    #Find positions of player and apples
     apples_x = []
     apples_y = []
     for y in range(12):
@@ -584,6 +690,8 @@ def Check(map):
             #End If
         #Next
     #Next  
+
+    # Reconfigurate map
     for y in range(12):
         for x in range(16):
             if map[x][y] > 2:
@@ -593,6 +701,8 @@ def Check(map):
             #End If
         #Next
     #Next  
+
+    # Display checking screen when function is active
     for count in range(len(apples_x)):
         screen.fill(BLACK)
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
@@ -601,39 +711,30 @@ def Check(map):
         screen.blit(text, [205, 70])
         # -- flip display to reveal new position of objects
         pygame.display.flip()
+
+        # Reconficurate map
         for y in range(12):
             for x in range(16):
                 if map[x][y] > 1:
                     map[x][y] = 0
             #Next
         #Next  
+
+        #Local variables
         found = False
         fail = False
         counter = 0
         current_x = player_x
         current_y = player_y
+
+        # Checking loop
         while found == False and fail == False:
-            last_x = current_x
-            last_y = current_y
             j = 0
             left = False
             right = False
             up = False
             down = False
-            if counter == 1000:
-                for count in range(len(apples_x)):
-                    for y in range(12):
-                        for x in range(16):
-                            if map[x][y] == 7:
-                                map[x][y] = 0
-                            #End If
-                        #Next
-                    #Next
-                #Next
-                current_x = player_x
-                current_y = player_y
-            #End If
-            elif current_x == 0 and current_y == 0:
+            if current_x == 0 and current_y == 0:
                 while right == False and up == False and fail == False:
                     if j == 1:
                         j = 1

@@ -734,7 +734,11 @@ def Check(map):
             right = False
             up = False
             down = False
+
+            # Decide where to move
+            # Corners
             if current_x == 0 and current_y == 0:
+                # Find least recently visited adjacent square
                 while right == False and up == False and fail == False:
                     if j == 1:
                         j = 1
@@ -744,8 +748,8 @@ def Check(map):
                         right = True
                     elif j > 192:
                         fail = True
-                    j = j + 1
                     #End If
+                    j = j + 1
                 #Endwhile
                 if up == True:
                     if map[current_x][current_y] > 1:

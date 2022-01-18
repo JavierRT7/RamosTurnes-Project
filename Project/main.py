@@ -2671,49 +2671,70 @@ while my_game == True:
                         endgame = True
                     #End If
                 #Next event
-                # -- Game logic goes after this comment
+
+                # Player movenent
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_UP]:
                     player.speed_y = -2
                     player.rect.y = player.rect.y + player.speed_y
                     if player.rect.y < 0:
                         player.rect.y = player.rect.y - player.speed_y
+                    #End If
                 #End If
                 if keys[pygame.K_DOWN]:
                     player.speed_y = 2
                     player.rect.y = player.rect.y + player.speed_y
                     if player.rect.y > 450:
                         player.rect.y = player.rect.y - player.speed_y
+                    #End If
                 #End If
                 if keys[pygame.K_RIGHT]:
                     player.speed_x = 2
                     player.rect.x = player.rect.x + player.speed_x
                     if player.rect.x > 610:
                         player.rect.x = player.rect.x - player.speed_x
+                    #End If
                 #End If
                 if keys[pygame.K_LEFT]:
                     player.speed_x = -2
                     player.rect.x = player.rect.x + player.speed_x
                     if player.rect.x < 0:
                         player.rect.x = player.rect.x - player.speed_x
+                    #End If
                 #End If
+
+                # Pause button
                 if keys[pygame.K_p]:
                     pause = True
+                #End If
+
+                # Pause loop
                 while pause == True:
+
+                    # User inputs
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             pause = False
                             all_level_game = False
                             my_game = False
                             endgame = True
+                        #End If
                         if event.type == pygame.KEYDOWN:
                             if event.key == pygame.K_RETURN:
                                 pause = False
+                            #End If
                             if event.key == pygame.K_ESCAPE:
                                 pause = False
                                 all_level_game = False
                                 intro = True
+                            #End If
+                        #End If
+                    #Next
+
+                    # Screen background is BLACK
                     screen.fill(BLACK)
+
+                    # Draw here
                     pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
                     font = pygame.font.SysFont('ComicSans', 100, True, False)
                     text = font.render('Game Paused', True, WHITE)
@@ -2723,35 +2744,54 @@ while my_game == True:
                     screen.blit(text, [285, 330])
                     text = font.render('Press escape to return to the home page', True, WHITE)
                     screen.blit(text, [245, 360])
+
+                    # Flip display to reveal new position of objects
                     pygame.display.flip()
+
+                    # The clock ticks over
                     clock.tick(60)
+                #Endwhile - End of pause loop
+
+                # Collisions
                 player_brick_hit_list = pygame.sprite.spritecollide(player, brick_group, False)
                 for foo in player_brick_hit_list:
                     player.rect.x = player.old_x
                     player.rect.y = player.old_y
                     player.speed_x = 0
                     player.speed_y = 0
+                #Next
                 player_window_hit_list = pygame.sprite.spritecollide(player, window_group, False)
                 for foo in player_window_hit_list:
                     player.rect.x = player.old_x
                     player.rect.y = player.old_y
                     player.speed_x = 0
                     player.speed_y = 0
+                #Next
+
+                # Sprites update
                 all_sprites_group.update()
+
+                # Checks for end of game
                 if player.apples == apple_number and counter == 10:
                     all_level_game = False
                     winner_of_all_levels = True
                 elif player.apples == apple_number:
                     all_level_game = False
                     all_level_mapping = True
+                #End If
                 if player.health < 1 and own_level == False:
                     all_level_game = False
                     loser_of_own_map = True
+                #End If
                 if player.health < 1 and own_level == True:
                     all_level_game = False
                     loser_of_level = True
-                # -- Screen background is BLACK
+                #End If
+
+                # Screen background is WHITE
                 screen.fill(WHITE)
+
+                # Draw here
                 pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
                 map_block_group.draw(screen)
                 brick_group.draw(screen)
@@ -2768,20 +2808,31 @@ while my_game == True:
                 screen.blit(text, [650, 70])
                 text = font.render('Press p to pause', True, WHITE)
                 screen.blit(text, [650, 100])
-                # -- Draw here
-                # -- flip display to reveal new position of objects
+
+                # Flip display to reveal new position of objects
                 pygame.display.flip()
-                # - The clock ticks over
+
+                # The clock ticks over
                 clock.tick(60)
+
+                # Update score
                 score = score - 1
-            #End While - End of game loop
+            #Endwhile - End of all level game loop
+
+            # Reset
             for sprite in map_sprites_group:
                 sprite.kill()
             for sprite in player_sprites_group:
                 sprite.kill()
             total_score = total_score + score
             apple_number = 0
+        #Next
+    #Endwhile - End of all level loop
+
+    # Mapping loop
     while mapping == True:
+
+        # Map sprites to map
         for y in range(12):
             for x in range(16):
                 map_block = Map_Block(WHITE, 40, 40, x*40, y *40)
@@ -2851,63 +2902,94 @@ while my_game == True:
                 #End If
             #Next
         #Next
+
+        # Set score
         score = 30000
+
+        # Remove drawing sprites
         for sprite in draw_sprites_group:
             sprite.kill()
+        #Next
+
+        # Switch loops
         mapping = False
         in_game = True
+    #Endwhile - End of mapping loop
+
+    # In game loop
     while in_game == True:
-        # -- User input and controls
+        # User input and controls
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 in_game = False
                 my_game = False
                 endgame = True
             #End If
-        #Next event
-        # -- Game logic goes after this comment
+        #Next
+
+        # Player movement
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
             player.speed_y = -2
             player.rect.y = player.rect.y + player.speed_y
             if player.rect.y < 0:
                 player.rect.y = player.rect.y - player.speed_y
+            #End If
         #End If
         if keys[pygame.K_DOWN]:
             player.speed_y = 2
             player.rect.y = player.rect.y + player.speed_y
             if player.rect.y > 450:
                 player.rect.y = player.rect.y - player.speed_y
+            #End If
         #End If
         if keys[pygame.K_RIGHT]:
             player.speed_x = 2
             player.rect.x = player.rect.x + player.speed_x
             if player.rect.x > 610:
                 player.rect.x = player.rect.x - player.speed_x
+            #End If
         #End If
         if keys[pygame.K_LEFT]:
             player.speed_x = -2
             player.rect.x = player.rect.x + player.speed_x
             if player.rect.x < 0:
                 player.rect.x = player.rect.x - player.speed_x
+            #End If
         #End If
+
+        # Pause button
         if keys[pygame.K_p]:
             pause = True
+        #End If
+
+        # Pause loop
         while pause == True:
+
+            # User inputs
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pause = False
                     in_game = False
                     my_game = False
                     endgame = True
+                #End If
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         pause = False
+                    #End If
                     if event.key == pygame.K_ESCAPE:
                         pause = False
                         in_game = False
                         intro = True
+                    #End If
+                #End If
+            #Next
+
+            # Screen background is BLACK
             screen.fill(BLACK)
+
+            # Draw here
             pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
             font = pygame.font.SysFont('ComicSans', 100, True, False)
             text = font.render('Game Paused', True, WHITE)
@@ -2917,37 +2999,57 @@ while my_game == True:
             screen.blit(text, [285, 330])
             text = font.render('Press escape to return to the home page', True, WHITE)
             screen.blit(text, [245, 360])
+
+            # Flip display to reveal new position of objects
             pygame.display.flip()
+
+            # The clock ticks over
             clock.tick(60)
+        #Endwhile - End of pause loop
+
+        # Collisions
         player_brick_hit_list = pygame.sprite.spritecollide(player, brick_group, False)
         for foo in player_brick_hit_list:
             player.rect.x = player.old_x
             player.rect.y = player.old_y
             player.speed_x = 0
             player.speed_y = 0
+        #Next
         player_window_hit_list = pygame.sprite.spritecollide(player, window_group, False)
         for foo in player_window_hit_list:
             player.rect.x = player.old_x
             player.rect.y = player.old_y
             player.speed_x = 0
             player.speed_y = 0
+        #Next
+
+        # Update sprites
         all_sprites_group.update()
+
+        # Checks for end of game
         if player.apples == apple_number and own_level == False:
             score = score + player.health * 60
             in_game = False
             winner_of_own_map = True
+        #End If
         if player.health < 1 and own_level == False:
             in_game = False
             loser_of_own_map = True
+        #End If
         if player.apples == apple_number and own_level == True:
             score = score + player.health * 60
             in_game = False
             winner_of_level = True
+        #End If
         if player.health < 1 and own_level == True:
             in_game = False
             loser_of_level = True
-        # -- Screen background is BLACK
+        #End If
+
+        # Screen background is WHITE
         screen.fill(WHITE)
+
+        # Draw here
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
         map_block_group.draw(screen)
         brick_group.draw(screen)
@@ -2964,14 +3066,21 @@ while my_game == True:
         screen.blit(text, [650, 70])
         text = font.render('Press p to pause', True, WHITE)
         screen.blit(text, [650, 100])
-        # -- Draw here
-        # -- flip display to reveal new position of objects
+
+        # Flip display to reveal new position of objects
         pygame.display.flip()
+
         # - The clock ticks over
         clock.tick(60)
+
+        # Update score
         score = score - 1
-    #End While - End of game loop
+    #End While - End of in game loop
+
+    # Demo mapping loop
     while demo_mapping == True:
+        
+        # Check for level
         if level_demo == 1:
             map = level1
         elif level_demo == 2:
@@ -2992,6 +3101,9 @@ while my_game == True:
             map = level9
         elif level_demo == 10:
             map = level10
+        #End If
+
+        # Map sprites to map
         for y in range(12):
             for x in range(16):
                 map_block = Map_Block(WHITE, 40, 40, x*40, y *40)
@@ -3061,40 +3173,67 @@ while my_game == True:
                 #End If
             #Next
         #Next
+
+        # Set score
         score = 30000
+
+        # Remove drawing sprites
         for sprite in draw_sprites_group:
             sprite.kill()
+        #Next
+
+        # Set player speed
         player.speed_x = random.randint(-2, 2)
         player.speed_y = random.randint(-2, 2)
+
+        # Switch loops
         demo_mapping = False
         demo_game = True
+    #Endwhile - End of demo mapping loop
+
+    # Demo game loop
     while demo_game == True:
-        # -- User input and controls
+
+        # User input and controls
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 demo_game = False
                 my_game = False
                 endgame = True
             #End If
-        #Next event
+        #Next
+
+        # Pause button
         keys = pygame.key.get_pressed()
         if keys[pygame.K_p]:
             pause = True
+
+        # Pause loop
         while pause == True:
+
+            # User inputs
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pause = False
                     demo_game = False
                     my_game = False
                     endgame = True
+                #End If
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         pause = False
+                    #End If
                     if event.key == pygame.K_ESCAPE:
                         pause = False
                         demo_game = False
                         intro = True
+                    #End If
+                #End If
+            
+            # Screen background is BLACK
             screen.fill(BLACK)
+
+            # Draw here
             pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
             font = pygame.font.SysFont('ComicSans', 100, True, False)
             text = font.render('Game Paused', True, WHITE)
@@ -3104,59 +3243,89 @@ while my_game == True:
             screen.blit(text, [285, 330])
             text = font.render('Press escape to return to the home page', True, WHITE)
             screen.blit(text, [245, 360])
+
+            # Flip display to reveal new position of objects
             pygame.display.flip()
+
+            # The clock ticks over
             clock.tick(60)
-        # -- Game logic goes after this comment
+        #Endwhile - End of pause loop
+
+        # Update player position
         player.rect.x = player.rect.x + player.speed_x
         player.rect.y = player.rect.y + player.speed_y
+
+        # Prevent player from coming to a standstill
         if player.speed_x == 0 and player.speed_y == 0:
             player.speed_x = random.randint(-2, 2)
             player.speed_y = random.randint(-2, 2)
+        #End If
+
+        # Stop player going off the screen
         if player.rect.y < 0:
             player.rect.x = player.old_x
             player.rect.y = player.old_y
             player.speed_x = random.randint(-2, 2)
             player.speed_y = random.randint(-2, 2)
+        #End If
         if player.rect.y > 450:
             player.rect.x = player.old_x
             player.rect.y = player.old_y
             player.speed_x = random.randint(-2, 2)
             player.speed_y = random.randint(-2, 2)
+        #End If
         if player.rect.x > 610:
             player.rect.x = player.old_x
             player.rect.y = player.old_y
             player.speed_x = random.randint(-2, 2)
             player.speed_y = random.randint(-2, 2)
+        #End If
         if player.rect.x < 0:
             player.rect.x = player.old_x
             player.rect.y = player.old_y
             player.speed_x = random.randint(-2, 2)
             player.speed_y = random.randint(-2, 2)
+        #End If
+
+        # Collisions
         player_brick_hit_list = pygame.sprite.spritecollide(player, brick_group, False)
         for foo in player_brick_hit_list:
             player.rect.x = player.old_x
             player.rect.y = player.old_y
             player.speed_x = random.randint(-2, 2)
             player.speed_y = random.randint(-2, 2)
+        #Next
         player_window_hit_list = pygame.sprite.spritecollide(player, window_group, False)
         for foo in player_window_hit_list:
             player.rect.x = player.old_x
             player.rect.y = player.old_y
             player.speed_x = random.randint(-2, 2)
             player.speed_y = random.randint(-2, 2)
+        #Next
+
+        # Prevent player from coming to a standstill
         if player.speed_x == 0 and player.speed_y == 0:
             player.speed_x = random.randint(-2, 2)
             player.speed_y = random.randint(-2, 2)
+        #End If
+
+        # Update sprites
         all_sprites_group.update()
+
+        # Checks for end of game
         if player.apples == apple_number:
             score = score + player.health * 60
             demo_game = False
             demo_end = True
+        #End If
         if player.health < 1:
             demo_game = False
             demo_end = True
-        # -- Screen background is BLACK
+        #End If
+        # Screen background is WHITE
         screen.fill(WHITE)
+
+        # Draw here
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
         map_block_group.draw(screen)
         brick_group.draw(screen)
@@ -3173,31 +3342,43 @@ while my_game == True:
         screen.blit(text, [650, 70])
         text = font.render('Press p to pause', True, WHITE)
         screen.blit(text, [650, 100])
-        # -- Draw here
-        # -- flip display to reveal new position of objects
+
+        # Flip display to reveal new position of objects
         pygame.display.flip()
-        # - The clock ticks over
+
+        # The clock ticks over
         clock.tick(60)
+
+        # Update score
         score = score - 1
-    #End While - End of game loop
+
+    #End While - End of demo game loop
+
+    # End of demo loop
     while demo_end == True:
-        # -- User input and controls
+        # User input and controls
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 demo_end = False
                 my_game = False
                 endgame = True
-            elif event.type == pygame.KEYDOWN: # - a key is down
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     demo_end = False
                     intro = True
+                #End If
                 if event.key == pygame.K_ESCAPE:
                     demo_end = False
                     my_game = False
                     endgame = True
+                #End If
             #End If
-        #Next event
+        #Next
+
+        # Screen background is BLACK
         screen.fill(BLACK)
+
+        # Draw here
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
         font = pygame.font.SysFont('ComicSans', 100, True, False)
         text = font.render('Demo Ended', True, WHITE)
@@ -3207,28 +3388,40 @@ while my_game == True:
         screen.blit(text, [250, 330])
         text = font.render('Press escape to quit', True, WHITE)
         screen.blit(text, [360, 360])
-        # -- flip display to reveal new position of objects
+
+        # Flip display to reveal new position of objects
         pygame.display.flip()
-        # - The clock ticks over
+
+        # The clock ticks over
         clock.tick(60)
+    #Endwhile - End of end of demo loop
+
+    # Winner of own map loop
     while winner_of_own_map == True:
-        # -- User input and controls
+        # User input and controls
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 winner_of_own_map = False
                 my_game = False
                 endgame = True
-            elif event.type == pygame.KEYDOWN: # - a key is down
+            #End If
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     winner_of_own_map = False
                     intro = True
+                #End If
                 if event.key == pygame.K_ESCAPE:
                     winner_of_own_map = False
                     my_game = False
                     endgame = True
+                #End If
             #End If
-        #Next event
+        #Next
+
+        #Screen background is BLACK
         screen.fill(BLACK)
+
+        # Draw here
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
         font = pygame.font.SysFont('ComicSans', 100, True, False)
         text = font.render('All Apples Collected!', True, WHITE)
@@ -3242,28 +3435,40 @@ while my_game == True:
         screen.blit(text, [250, 330])
         text = font.render('Press escape to quit', True, WHITE)
         screen.blit(text, [360, 360])
-        # -- flip display to reveal new position of objects
+
+        # Flip display to reveal new position of objects
         pygame.display.flip()
-        # - The clock ticks over
+
+        # The clock ticks over
         clock.tick(60)
+    #Endwhile - End winne rof own map loop
+
+    # Loser of own map loop
     while loser_of_own_map == True:
-        # -- User input and controls
+        # User input and controls
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 loser_of_own_map = False
                 my_game = False
                 endgame = True
+            #End If
             elif event.type == pygame.KEYDOWN: # - a key is down
                 if event.key == pygame.K_RETURN:
                     loser_of_own_map = False
                     intro = True
+                #End If
                 if event.key == pygame.K_ESCAPE:
                     loser_of_own_map = False
                     my_game = False
                     endgame = True
+                #End If
             #End If
-        #Next event
+        #Next
+
+        # Screen background is black
         screen.fill(BLACK)
+
+        # Draw here
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
         font = pygame.font.SysFont('ComicSans', 100, True, False)
         text = font.render('You Are Dead!', True, WHITE)
@@ -3275,12 +3480,17 @@ while my_game == True:
         screen.blit(text, [250, 330])
         text = font.render('Press escape to quit', True, WHITE)
         screen.blit(text, [360, 360])
-        # -- flip display to reveal new position of objects
+
+        # Flip display to reveal new position of objects
         pygame.display.flip()
-        # - The clock ticks over
+
+        # The clock ticks over
         clock.tick(60)
+    #Endwhile - End of loser of own map loop
+
+    # Winner of level loop
     while winner_of_level == True:
-        # -- User input and controls
+        # User input and controls
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 winner_of_level = False
@@ -3290,13 +3500,19 @@ while my_game == True:
                 if event.key == pygame.K_RETURN:
                     winner_of_level = False
                     intro = True
+                #End If
                 if event.key == pygame.K_ESCAPE:
                     winner_of_level = False
                     my_game = False
                     endgame = True
+                #End If
             #End If
-        #Next event
+        #Next
+
+        # Screen background is BLACK
         screen.fill(BLACK)
+
+        # Draw here
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
         font = pygame.font.SysFont('ComicSans', 100, True, False)
         text = font.render('All Apples Collected!', True, WHITE)
@@ -3310,12 +3526,17 @@ while my_game == True:
         screen.blit(text, [250, 330])
         text = font.render('Press escape to quit', True, WHITE)
         screen.blit(text, [360, 360])
-        # -- flip display to reveal new position of objects
+
+        # Flip display to reveal new position of objects
         pygame.display.flip()
+
         # - The clock ticks over
         clock.tick(60)
+    #Endwhile - End winner of level loop
+
+    # Loser of level loop
     while loser_of_level == True:
-        # -- User input and controls
+        # User input and controls
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 loser_of_level = False
@@ -3325,13 +3546,19 @@ while my_game == True:
                 if event.key == pygame.K_RETURN:
                     loser_of_level = False
                     intro = True
+                #End If
                 if event.key == pygame.K_ESCAPE:
                     loser_of_level = False
                     my_game = False
                     endgame = True
+                #End If
             #End If
-        #Next event
+        #Next
+
+        # Screen background is BLACK
         screen.fill(BLACK)
+
+        # Draw here
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
         font = pygame.font.SysFont('ComicSans', 100, True, False)
         text = font.render('You Are Dead!', True, WHITE)
@@ -3343,28 +3570,39 @@ while my_game == True:
         screen.blit(text, [250, 330])
         text = font.render('Press escape to quit', True, WHITE)
         screen.blit(text, [360, 360])
-        # -- flip display to reveal new position of objects
+
+        # Flip display to reveal new position of objects
         pygame.display.flip()
-        # - The clock ticks over
+
+        # The clock ticks over
         clock.tick(60)
+    #Endwhile - End of loser of level loop
+    
+    # Winner of all levels loop
     while winner_of_all_levels == True:
-        # -- User input and controls
+        # User input and controls
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 winner_of_all_levels = False
                 my_game = False
                 endgame = True
-            elif event.type == pygame.KEYDOWN: # - a key is down
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     winner_of_all_levels = False
                     intro = True
+                #End If
                 if event.key == pygame.K_ESCAPE:
                     winner_of_all_levels = False
                     my_game = False
                     endgame = True
+                #End If
             #End If
-        #Next event
+        #Next
+
+        # Screen background is BLACK
         screen.fill(BLACK)
+
+        # Draw here
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
         font = pygame.font.SysFont('ComicSans', 100, True, False)
         text = font.render('All Apples Collected!', True, WHITE)
@@ -3378,9 +3616,15 @@ while my_game == True:
         screen.blit(text, [250, 330])
         text = font.render('Press escape to quit', True, WHITE)
         screen.blit(text, [360, 360])
-        # -- flip display to reveal new position of objects
+
+        # Flip display to reveal new position of objects
         pygame.display.flip()
-        # - The clock ticks over
+        # The clock ticks over
         clock.tick(60)
+    #Endwhile - End winner of all levels loop
+#Endwhile - End my game loop
+
+# Endgame
 if endgame == True:
     pygame.quit()
+#End If

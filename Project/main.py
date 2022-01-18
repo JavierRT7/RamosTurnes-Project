@@ -1880,6 +1880,7 @@ def Check(map):
                         current_x = current_x + 1
                     #End If
                 elif apples_x[count] < current_x and apples_y[count] < current_y:
+                    # Find least recently visited adjacent square
                     while left == False and down == False and up == False and right == False and fail == False:
                         if j == 1:
                             j = 1
@@ -1893,74 +1894,99 @@ def Check(map):
                             right = True
                         elif j > 192:
                             fail = True
-                        j = j + 1
                         #End If
+                        j = j + 1
                     #Endwhile
+                    # Check which square it is moving to
                     if left == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x - 1
                     elif down == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y - 1
                     elif up == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y + 1
                     elif right == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
-                            #Next  
+                            #Next 
+                        #End If
+                        # Set square to most recently visited 
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x + 1
                     #End If
                 #End If
             #End If
+            # Check if an apple has been found
             if current_x == apples_x[count] and current_y == apples_y[count]:
                 apples_x[count] = 400
                 apples_y[count] = 400
                 found = True
+            #End If
+            # Check time
             counter = counter + 1
             if counter == 10000 and found == False:
                 fail = True
             #End If
         #End While
     #Next
+    # Check if map is valid
     valid = True
     for i in range(len(apples_x)):
         if apples_x[i] != 400:
@@ -1969,7 +1995,11 @@ def Check(map):
     #Next
     return valid
 #End Function
+
+# Game Loop
 while my_game == True:
+    
+    # Maps
     map = [[0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
@@ -2002,6 +2032,8 @@ while my_game == True:
     [0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],]
+
+    # Sprite Groups
     all_sprites_group = pygame.sprite.Group()
     selector_sprites_group = pygame.sprite.Group()
     map_sprites_group = pygame.sprite.Group()
@@ -2020,6 +2052,8 @@ while my_game == True:
     brick_right_group = pygame.sprite.Group()
     brick_up_group = pygame.sprite.Group()
     brick_down_group = pygame.sprite.Group()
+
+    # Globals
     apple_number = 0
     own_level = False
     all_levels = False
@@ -2031,20 +2065,26 @@ while my_game == True:
     score = 0
     level_demo = random.randint(1, 10)
     apples = 0
-    # -- Manages how fast screen refreshes
+
+    # Manages how fast screen refreshes
     clock = pygame.time.Clock()
-    ### -- Game Loop
+
+    # Intro Loop
     while intro == True:
+        # Remove old sprites
         for item in all_sprites_group:
             item.kill()
-        # -- User input and controls
+        #Next
+        # Quit game
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 intro = False
                 my_game = False
                 endgame = True
             #End If
-        #Next event
+        #Next
+
+        # User inputs
         keys = pygame.key.get_pressed()
         if keys[pygame.K_1]:
             intro = False
@@ -2065,18 +2105,24 @@ while my_game == True:
             map = level1
             intro = False
             mapping = True
-        # -- Game logic goes after this comment
-        # -- Screen background is BLACK
+        #End If
+
+        # Screen background is BLACK
         screen.fill(BLACK)
-        # -- Draw here
+
+        # Draw here
         intro_screen = pygame.image.load('Template.png').convert_alpha()
         intro_screen = pygame.transform.smoothscale(intro_screen, (1000, 480)) 
         screen.blit(intro_screen, (0, 0))
-        # -- flip display to reveal new position of objects
+
+        # Flip display to reveal new position of objects
         pygame.display.flip()
-        # - The clock ticks over
+
+        # The clock ticks over
         clock.tick(60)
-    #End While - End of game loop
+    #End While - End of intro loop
+
+    # Create selector icon
     #top selector
     selector_top = Selector_Top(0, 0, 0, 0)
     all_sprites_group.add(selector_top)
@@ -2093,8 +2139,10 @@ while my_game == True:
     selector_bottom = Selector_Bottom(0, 35)
     all_sprites_group.add(selector_bottom)
     selector_sprites_group.add(selector_bottom)
+
+    # Levels menu loop
     while levels_menu == True:
-        # -- User input and controls
+        # User input and controls
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 levels_menu = False
@@ -2146,8 +2194,14 @@ while my_game == True:
                     all_level_mapping = True
                     all_levels = True
                     total_score = 0
+                #End If
+            #End If
         #Next event
+
+        # Screen background is BLACK
         screen.fill(BLACK)
+
+        # Draw here
         pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
         font = pygame.font.SysFont('ComicSans', 50, True, False)
         text = font.render('Which level do you want to do?', True, WHITE)
@@ -2175,21 +2229,30 @@ while my_game == True:
         screen.blit(text, [291, 340])
         text = font.render('Press a to play all levels', True, WHITE)
         screen.blit(text, [280, 370])
-        # -- flip display to reveal new position of objects
+
+        # Flip display to reveal new position of objects
         pygame.display.flip()
-        # - The clock ticks over
+
+        # The clock ticks over
         clock.tick(60)
+    #Endwhile - End of level menu loop
+
+    # Map draw loop
     while map_draw == True:
-    # -- User input and controls
+        # Screen
         size = (1000, 480)
         screen = pygame.display.set_mode(size)
+
+        # User input and controls
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 map_draw = False
                 my_game = False
                 endgame = True
-            elif event.type == pygame.KEYDOWN: # - a key is down
-                if event.key == pygame.K_RIGHT: # - if the left key pressed
+            elif event.type == pygame.KEYDOWN:
+
+                # Selector movement
+                if event.key == pygame.K_RIGHT: 
                     selector_left.rect.x = selector_left.rect.x + 40
                     selector_right.rect.x = selector_right.rect.x + 40
                     selector_top.rect.x = selector_top.rect.x + 40
@@ -2201,7 +2264,7 @@ while my_game == True:
                         selector_top.rect.x = selector_top.rect.x - 40
                         selector_bottom.rect.x = selector_bottom.rect.x - 40
                         selector_top.pos_x = selector_top.pos_x - 1
-                if event.key == pygame.K_LEFT: # - if the left key pressed
+                if event.key == pygame.K_LEFT:
                     selector_left.rect.x = selector_left.rect.x - 40
                     selector_right.rect.x = selector_right.rect.x - 40
                     selector_top.rect.x = selector_top.rect.x - 40
@@ -2213,7 +2276,7 @@ while my_game == True:
                         selector_top.rect.x = selector_top.rect.x + 40
                         selector_bottom.rect.x = selector_bottom.rect.x + 40
                         selector_top.pos_x = selector_top.pos_x + 1
-                if event.key == pygame.K_DOWN: # - if the left key pressed
+                if event.key == pygame.K_DOWN:
                     selector_left.rect.y = selector_left.rect.y + 40
                     selector_right.rect.y = selector_right.rect.y + 40
                     selector_top.rect.y = selector_top.rect.y + 40
@@ -2225,7 +2288,7 @@ while my_game == True:
                         selector_top.rect.y = selector_top.rect.y - 40
                         selector_bottom.rect.y = selector_bottom.rect.y - 40
                         selector_top.pos_y = selector_top.pos_y - 1
-                if event.key == pygame.K_UP: # - if the left key pressed
+                if event.key == pygame.K_UP:
                     selector_left.rect.y = selector_left.rect.y - 40
                     selector_right.rect.y = selector_right.rect.y - 40
                     selector_top.rect.y = selector_top.rect.y - 40
@@ -2237,6 +2300,8 @@ while my_game == True:
                         selector_top.rect.y = selector_top.rect.y + 40
                         selector_bottom.rect.y = selector_bottom.rect.y + 40
                         selector_top.pos_y = selector_top.pos_y + 1
+
+                # Block placing and removing
                 if event.key == pygame.K_DELETE:
                     for sprite in draw_sprites_group:
                         sprite.kill()
@@ -2290,6 +2355,8 @@ while my_game == True:
                     draw_sprites_group.add(monster)
                     all_sprites_group.add(monster)
                     map[selector_top.pos_x][selector_top.pos_y] = 6
+                
+                # Game start and map validation
                 if event.key == pygame.K_RETURN:
                     dummy_map = copy.deepcopy(map)
                     if apples == 0:
@@ -2305,8 +2372,12 @@ while my_game == True:
                     else:
                         map_draw = False
                         mapping = True
+                    #End If
                 #End If
+            #End If
         #Next event
+
+        # Invalid map loop
         while invalid_map == True:
             # -- User input and controls
             for event in pygame.event.get():
@@ -2317,14 +2388,20 @@ while my_game == True:
                 elif event.type == pygame.KEYDOWN: # - a key is down
                     if event.key == pygame.K_RETURN:
                         invalid_map = False
+                    #End If
                     if event.key == pygame.K_ESCAPE:
                         invalid_map = False
                         map_draw = False
                         my_game = False
                         endgame = True
+                    #End If
                 #End If
             #Next event
+
+            # Screen background is BLACK
             screen.fill(BLACK)
+
+            # Draw here
             pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
             font = pygame.font.SysFont('ComicSans', 100, True, False)
             text = font.render('Invalid Map!', True, WHITE)
@@ -2334,27 +2411,37 @@ while my_game == True:
             screen.blit(text, [310, 330])
             text = font.render('Press escape to quit', True, WHITE)
             screen.blit(text, [360, 360])
-            # -- flip display to reveal new position of objects
+
+            # Flip display to reveal new position of objects
             pygame.display.flip()
+        #Endwhile - End invalid map loop
+
+        # No player loop
         while no_player == True:
-            # -- User input and controls
+            # User input and controls
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     no_player = False
                     my_game = False
                     endgame = True
-                elif event.type == pygame.KEYDOWN: # - a key is down
+                elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         is_player_there = False
                         no_player = False
+                    #End If
                     if event.key == pygame.K_ESCAPE:
                         no_player = False
                         map_draw = False
                         my_game = False
                         endgame = True
+                    #End If
                 #End If
             #Next event
+
+            # Screen background is BLACK
             screen.fill(BLACK)
+
+            # Draw here
             pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
             font = pygame.font.SysFont('ComicSans', 100, True, False)
             text = font.render('Place a Player!', True, WHITE)
@@ -2364,27 +2451,37 @@ while my_game == True:
             screen.blit(text, [310, 330])
             text = font.render('Press escape to quit', True, WHITE)
             screen.blit(text, [360, 360])
-            # -- flip display to reveal new position of objects
+
+            # Flip display to reveal new position of objects
             pygame.display.flip()
+        #Endwhile - End of no player loop
+
+        # No apples loop
         while no_apples == True:
-            # -- User input and controls
+            # User input and controls
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     no_apples = False
                     my_game = False
                     endgame = True
-                elif event.type == pygame.KEYDOWN: # - a key is down
+                elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         apple_there = False
                         no_apples = False
+                    #End If
                     if event.key == pygame.K_ESCAPE:
                         no_apples = False
                         map_draw = False
                         my_game = False
                         endgame = True
+                    #End If
                 #End If
             #Next event
+
+            # Screen background is BLACK
             screen.fill(BLACK)
+
+            # Draw here
             pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
             font = pygame.font.SysFont('ComicSans', 100, True, False)
             text = font.render('Place an Apple!', True, WHITE)
@@ -2394,12 +2491,15 @@ while my_game == True:
             screen.blit(text, [310, 330])
             text = font.render('Press escape to quit', True, WHITE)
             screen.blit(text, [360, 360])
-            # -- flip display to reveal new position of objects
+
+            # Flip display to reveal new position of objects
             pygame.display.flip()
-            # - The clock ticks over
-        # -- Game logic goes after this comment
-        # -- Screen background is BLACK
+        #Endwhile - End of no apples loop
+
+        # Screen background is WHITE
         screen.fill (WHITE)
+
+        # Draw here
         draw_sprites_group.draw(screen)
         selector_sprites_group.draw(screen)
         pygame.draw.rect(screen, BLACK, (40, 0, 1, 480))
@@ -2452,12 +2552,15 @@ while my_game == True:
         screen.blit(text, [650, 250])
         text = font.render('Enter to start the game', True, WHITE)
         screen.blit(text, [650, 280])
-        # -- Draw here
-        # -- flip display to reveal new position of objects
+
+        # Flip display to reveal new position of objects
         pygame.display.flip()
-        # - The clock ticks over
+
+        # The clock ticks over
         clock.tick(60)
-    #End While - End of game loop
+    #End While - End of map draw loop
+
+    # All levels loop
     if all_levels == True:
         for counter in range(1, 10):
             if counter == 1:
@@ -2480,6 +2583,9 @@ while my_game == True:
                 map = level9
             elif counter == 10:
                 map = level10
+            #End If
+
+            # All level mapping loop
             while all_level_mapping == True:
                 for y in range(12):
                     for x in range(16):
@@ -2553,6 +2659,9 @@ while my_game == True:
                 score = 30000
                 all_level_mapping = False
                 all_level_game = True
+            #Endwile - End all level mapping loop
+
+            # All level game loop
             while all_level_game == True:
                 # -- User input and controls
                 for event in pygame.event.get():

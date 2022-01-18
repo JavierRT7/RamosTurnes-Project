@@ -1331,6 +1331,7 @@ def Check(map):
                         current_y = current_y - 1
                     #End If
                 elif apples_x[count] == current_x and apples_y[count] < current_y:
+                    # Find least recently visited adjacent square
                     while down == False and right == False and left == False and up == False and fail == False:
                         if j == 1:
                             j = 1
@@ -1344,62 +1345,85 @@ def Check(map):
                             up = True
                         elif j > 192:
                             fail = True
-                        j = j + 1
                         #End If
+                        j = j + 1
                     #Endwhile
+                    # Check which square it is moving to
                     if down == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y - 1
                     elif right == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x + 1
                     elif left == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
-                            #Next  
+                            #Next 
+                        #End If
+                        # Set square to most recently visited 
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x - 1
                     elif up == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square for most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y + 1
+                    #End If
                 elif apples_x[count] > current_x and apples_y[count] == current_y:
+                    # Find least recently visited adjacent square
                     while right == False and up == False and down == False and left == False and fail == False:
                         if j == 1:
                             j = 1
@@ -1413,62 +1437,85 @@ def Check(map):
                             left = True
                         elif j > 192:
                             fail = True
-                        j = j + 1
                         #End If
+                        j = j + 1
                     #Endwhile
+                    # Check which square it is moving to
                     if right == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x + 1
                     elif up == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
-                                        map[x][y] = map[x][y] - 1 
+                                        map[x][y] = map[x][y] - 1
+                                    #End If 
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y + 1
                     elif down == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
-                            #Next  
+                            #Next 
+                        #End If
+                        # Set square to most recently visited 
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y - 1
                     elif left == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
-                            #Next  
+                            #Next
+                        #End If
+                        # Set square to most recently visited  
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x - 1
+                    #End If
                 elif apples_x[count] < current_x and apples_y[count] == current_y:
+                    # Find least recently visited adjacent square
                     while left == False and up == False and down == False and right == False and fail == False:
                         if j == 1:
                             j = 1
@@ -1482,62 +1529,83 @@ def Check(map):
                             right = True
                         elif j > 192:
                             fail = True
-                        j = j + 1
                         #End If
+                        j = j + 1
                     #Endwhile
                     if left == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x - 1
                     elif up == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y + 1
                     elif down == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y - 1
                     elif right == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x + 1
                 elif apples_x[count] > current_x and apples_y[count] > current_y:
+                    # Find least recently visited adjacent square
                     while up == False and right == False and left == False and down == False and fail == False:
                         if j == 1:
                             j = 1
@@ -1551,62 +1619,84 @@ def Check(map):
                             down = True
                         elif j > 192:
                             fail = True
-                        j = j + 1
                         #End If
+                        j = j + 1
                     #Endwhile
+                    # Check which square it is moving to
                     if up == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y + 1
                     elif right == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x + 1
                     elif left == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x - 1
                     elif down == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y - 1
                 elif apples_x[count] > current_x and apples_y[count] < current_y:
+                    # Find least recently visited adjacent square
                     while down == False and right == False and left == False and up == False and fail == False:
                         if j == 1:
                             j = 1
@@ -1620,62 +1710,85 @@ def Check(map):
                             up = True
                         elif j > 192:
                             fail = True
-                        j = j + 1
                         #End If
+                        j = j + 1
                     #Endwhile
+                    # Check which square it is moving to
                     if down == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y - 1
                     elif right == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
-                            #Next  
+                            #Next
+                        #End If
+                        # Set square to most recently visited  
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x + 1
                     elif left == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x - 1
                     elif up == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
-                            #Next  
+                            #Next 
+                        #End If
+                        # Set square to most recently visited 
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #End If
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y + 1
+                    #End If
                 elif apples_x[count] < current_x and apples_y[count] > current_y:
+                    # Find least recently visited adjacent square
                     while left == False and up == False and down == False and right == False and fail == False:
                         if j == 1:
                             j = 1
@@ -1689,61 +1802,83 @@ def Check(map):
                             right = True
                         elif j > 192:
                             fail = True
-                        j = j + 1
                         #End If
+                        j = j + 1
                     #Endwhile
+                    # Check which square it is moving to
                     if left == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x - 1
                     elif up == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
-                            #Next  
+                            #Next 
+                        #End If
+                        # Set square to most recently visited 
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y + 1
                     elif down == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
-                            #Next  
+                            #Next 
+                        #End If
+                        # Set square to most recently visited 
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y - 1
                     elif right == True:
+                        # Account for removed square
                         if map[current_x][current_y] > 1:
                             for y in range(12):
                                 for x in range(16):
                                     if map[x][y] > map[current_x][current_y]:
                                         map[x][y] = map[x][y] - 1 
+                                    #End If
                                 #Next
                             #Next  
+                        #End If
+                        # Set square to most recently visited
                         maxes = []
                         for n in range(16):
                             maxes.append(max(map[n]))
+                        #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x + 1
+                    #End If
                 elif apples_x[count] < current_x and apples_y[count] < current_y:
                     while left == False and down == False and up == False and right == False and fail == False:
                         if j == 1:

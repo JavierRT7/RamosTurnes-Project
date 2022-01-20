@@ -789,6 +789,7 @@ def Check(map):
                     map[current_x][current_y] = max(maxes) + 1
                     current_x = current_x + 1
                 #End If
+
             elif current_x == 0 and current_y == 11:
                 # Find least recently visited adjacent square
                 while right == False and down == False and fail == False:
@@ -841,6 +842,7 @@ def Check(map):
                     map[current_x][current_y] = max(maxes) + 1
                     current_x = current_x + 1
                 #End If
+
             elif current_x == 15 and current_y == 0:
                 # Find least recently visited square
                 while left == False and up == False and fail == False:
@@ -893,6 +895,7 @@ def Check(map):
                     map[current_x][current_y] = max(maxes) + 1
                     current_x = current_x - 1
                 #End If
+
             elif current_x == 15 and current_y == 11:
                 # Find least recently visited square
                 while left == False and down == False and fail == False:
@@ -1019,6 +1022,7 @@ def Check(map):
                     map[current_x][current_y] = max(maxes) + 1
                     current_y = current_y - 1
                 #End If
+
             elif current_y == 0:
                 # Find least recently visited adjacent square
                 while up == False and right == False and left == False and fail == False:
@@ -1091,6 +1095,7 @@ def Check(map):
                     map[current_x][current_y] = max(maxes) + 1
                     current_x = current_x - 1
                 #End If
+
             elif current_x == 15:
                 # Find least recently visited adjacent square
                 while left == False and up == False and down == False and fail == False:
@@ -1163,6 +1168,7 @@ def Check(map):
                     map[current_x][current_y] = max(maxes) + 1
                     current_y = current_y - 1
                 #End If
+
             elif current_y == 11:
                 # Find least recently visited adjacent square
                 while down == False and right == False and left == False and fail == False:
@@ -1330,6 +1336,7 @@ def Check(map):
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y - 1
                     #End If
+
                 elif apples_x[count] == current_x and apples_y[count] < current_y:
                     # Find least recently visited adjacent square
                     while down == False and right == False and left == False and up == False and fail == False:
@@ -1422,6 +1429,7 @@ def Check(map):
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y + 1
                     #End If
+
                 elif apples_x[count] > current_x and apples_y[count] == current_y:
                     # Find least recently visited adjacent square
                     while right == False and up == False and down == False and left == False and fail == False:
@@ -1514,6 +1522,7 @@ def Check(map):
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x - 1
                     #End If
+
                 elif apples_x[count] < current_x and apples_y[count] == current_y:
                     # Find least recently visited adjacent square
                     while left == False and up == False and down == False and right == False and fail == False:
@@ -1604,6 +1613,8 @@ def Check(map):
                         #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x + 1
+                    #End If
+
                 elif apples_x[count] > current_x and apples_y[count] > current_y:
                     # Find least recently visited adjacent square
                     while up == False and right == False and left == False and down == False and fail == False:
@@ -1695,6 +1706,8 @@ def Check(map):
                         #Next
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y - 1
+                    #End If
+
                 elif apples_x[count] > current_x and apples_y[count] < current_y:
                     # Find least recently visited adjacent square
                     while down == False and right == False and left == False and up == False and fail == False:
@@ -1787,6 +1800,7 @@ def Check(map):
                         map[current_x][current_y] = max(maxes) + 1
                         current_y = current_y + 1
                     #End If
+
                 elif apples_x[count] < current_x and apples_y[count] > current_y:
                     # Find least recently visited adjacent square
                     while left == False and up == False and down == False and right == False and fail == False:
@@ -1879,6 +1893,7 @@ def Check(map):
                         map[current_x][current_y] = max(maxes) + 1
                         current_x = current_x + 1
                     #End If
+
                 elif apples_x[count] < current_x and apples_y[count] < current_y:
                     # Find least recently visited adjacent square
                     while left == False and down == False and up == False and right == False and fail == False:
@@ -1973,12 +1988,14 @@ def Check(map):
                     #End If
                 #End If
             #End If
+
             # Check if an apple has been found
             if current_x == apples_x[count] and current_y == apples_y[count]:
                 apples_x[count] = 400
                 apples_y[count] = 400
                 found = True
             #End If
+
             # Check time
             counter = counter + 1
             if counter == 10000 and found == False:
@@ -1986,12 +2003,14 @@ def Check(map):
             #End If
         #End While
     #Next
+
     # Check if map is valid
     valid = True
     for i in range(len(apples_x)):
         if apples_x[i] != 400:
             valid = False
         #End If
+        
     #Next
     return valid
 #End Function

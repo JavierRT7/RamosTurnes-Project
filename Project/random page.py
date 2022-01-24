@@ -1,5 +1,6 @@
 import pygame
 import random
+import copy
 # -- Global Constants
 # -- Colours
 BLACK = (0,0,0)
@@ -383,7 +384,6 @@ class Apple(pygame.sprite.Sprite):
             for sprite in brick_down_group:
                 if self.rect.y < sprite.rect.y:
                     drawing_group.remove(self)
-#End Class
 # -- Exit game flag set to false
 my_game = True
 intro = True
@@ -404,6 +404,7 @@ demo_end = False
 no_player = False
 no_apples = False
 pause = False
+invalid_map = False
 level1 = [[5, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 6], 
 [0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 [0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], 
@@ -584,6 +585,13 @@ def Check(map):
         #Next
     #Next  
     for count in range(len(apples_x)):
+        screen.fill(BLACK)
+        pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+        font = pygame.font.SysFont('ComicSans', 100, True, False)
+        text = font.render('Checking Map', True, WHITE)
+        screen.blit(text, [205, 70])
+        # -- flip display to reveal new position of objects
+        pygame.display.flip()
         for y in range(12):
             for x in range(16):
                 if map[x][y] == 7:
@@ -593,40 +601,1144 @@ def Check(map):
         #Next  
         found = False
         fail = False
+        counter = 0
         current_x = player_x
         current_y = player_y
         last_x = player_x
         last_y = player_y
         map[current_x][current_y] = 7
         while found == False and fail == False:
-            while apples_x[count] > current_x and apples_y[count] > current_y:
-                if map[current_x][current_y + 1] == 4:
+            if counter == 1000:
+                for count in range(len(apples_x)):
+                    for y in range(12):
+                        for x in range(16):
+                            if map[x][y] == 7:
+                                map[x][y] = 0
+                            #End If
+                        #Next
+                    #Next
+                #Next
+                current_x = player_x
+                current_y = player_y
+            #End If
+            if counter >= 1000:
+                r = random.randint(0, 3)
+                if r == 0 and current_x + 1 < 16 and map[current_x + 1][current_y] != 1 and map[current_x + 1][current_y] != 2:
+                    current_x = current_x + 1
+                if r == 1 and current_x - 1 > -1 and map[current_x - 1][current_y] != 1 and map[current_x - 1][current_y] != 2:
+                    current_x = current_x - 1
+                if r == 2 and current_y + 1 < 12 and map[current_x][current_y + 1] != 1 and map[current_x][current_y + 1] != 2:
+                    current_y = current_y + 1
+                if r == 3 and current_y - 1 > -1 and map[current_x][current_y - 1] != 1 and map[current_x][current_y - 1] != 2:
+                    current_y = current_y - 1
+                #End If
+                if current_x == apples_x[count] and current_y == apples_y[count]:
                     apples_x[count] = 400
                     apples_y[count] = 400
                     found = True
-                elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6:
+            elif current_x == 0 and current_y == 0:
+                if current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6 or map[current_x][current_y + 1] == 4:
                     current_y = current_y + 1
                     map[current_x][current_y] = 7
                     last_x = current_x
                     last_y = current_y - 1
-                elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6:
+                elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6 or map[current_x + 1][current_y] == 4:
                     current_x = current_x + 1
                     map[current_x][current_y] = 7
                     last_x = current_x - 1
                     last_y = current_y
-                elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6:
+                elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                elif map[current_x][current_y + 1] == 7:
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x + 1][current_y] == 7:
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                else:
+                    fail = True
+                #End If
+            elif current_x == 0 and current_y == 11:
+                if current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6 or map[current_x][current_y - 1] == 4:
                     current_y = current_y - 1
                     map[current_x][current_y] = 7
                     last_x = current_x
                     last_y = current_y + 1
-                elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6:
+                elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6 or map[current_x + 1][current_y] == 4:
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 7:
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x + 1][current_y] == 7:
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                else:
+                    fail = True
+                #End If
+            elif current_x == 15 and current_y == 0:
+                if current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6 or map[current_x][current_y + 1] == 4:
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6 or map[current_x - 1][current_y] == 4:
                     current_x = current_x - 1
                     map[current_x][current_y] = 7
                     last_x = current_x + 1
                     last_y = current_y
+                elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                elif map[current_x][current_y + 1] == 7:
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x - 1][current_y] == 7:
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                else:
+                    fail = True
+                #End If
+            elif current_x == 15 and current_y == 11:
+                if current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6 or map[current_x][current_y - 1] == 4:
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6 or map[current_x - 1][current_y] == 4:
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 7:
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x - 1][current_y] == 7:
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                else:
+                    fail = True
+                #End If
+            #End If
+            elif current_x == 0:
+                if current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6 or map[current_x][current_y + 1] == 4:
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6 or map[current_x + 1][current_y] == 4:
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6 or map[current_x][current_y - 1] == 4:
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x][current_y + 1] == 7:
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x + 1][current_y] == 7:
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 7:
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                else:
+                    fail = True
+                #End If
+            elif current_y == 0:
+                if current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6 or map[current_x][current_y + 1] == 4:
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6 or map[current_x + 1][current_y] == 4:
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6 or map[current_x - 1][current_y] == 4:
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                elif map[current_x][current_y + 1] == 7:
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x + 1][current_y] == 7:
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                elif map[current_x - 1][current_y] == 7:
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                else:
+                    fail = True
+                #End If
+            elif current_x == 15:
+                if current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6 or map[current_x][current_y + 1] == 4:
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6 or map[current_x - 1][current_y] == 4:
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6 or map[current_x][current_y - 1] == 4:
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x][current_y + 1] == 7:
+                    current_y = current_y + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y - 1
+                elif map[current_x - 1][current_y] == 7:
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 7:
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                else:
+                    fail = True
+                #End If
+            elif current_y == 11:
+                if current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                    apples_x[count] = 400
+                    apples_y[count] = 400
+                    found = True
+                elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6 or map[current_x - 1][current_y] == 4:
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6 or map[current_x][current_y - 1] == 4:
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6 or map[current_x + 1][current_y] == 4:
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                elif map[current_x - 1][current_y] == 7:
+                    current_x = current_x - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x + 1
+                    last_y = current_y
+                elif map[current_x][current_y - 1] == 7:
+                    current_y = current_y - 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x
+                    last_y = current_y + 1
+                elif map[current_x + 1][current_y] == 7:
+                    current_x = current_x + 1
+                    map[current_x][current_y] = 7
+                    last_x = current_x - 1
+                    last_y = current_y
+                else:
+                    fail = True
+                #End If
+            else:
+                if apples_x[count] == current_x and apples_y[count] > current_y:
+                    if current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x + 1][current_y] == 7:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x - 1][current_y] == 7:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    else:
+                        fail = True
+                    #End If
+                elif apples_x[count] == current_x and apples_y[count] < current_y:
+                    if current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x + 1][current_y] == 7:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x - 1][current_y] == 7:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    else:
+                        fail = True
+                    #End If
+                elif apples_x[count] > current_x and apples_y[count] == current_y:
+                    if current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x + 1][current_y] == 7:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x - 1][current_y] == 7:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    else:
+                        fail = True
+                    #End If
+                elif apples_x[count] < current_x and apples_y[count] == current_y:
+                    if current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x - 1][current_y] == 7:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x + 1][current_y] == 7:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    else:
+                        fail = True
+                    #End If
+                elif apples_x[count] > current_x and apples_y[count] > current_y:
+                    if current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x + 1][current_y] == 7:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x - 1][current_y] == 7:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    else:
+                        fail = True
+                    #End If
+                elif apples_x[count] > current_x and apples_y[count] < current_y:
+                    if current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x + 1][current_y] == 7:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x - 1][current_y] == 7:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    else:
+                        fail = True
+                    #End If
+                elif apples_x[count] < current_x and apples_y[count] > current_y:
+                    if current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x - 1][current_y] == 7:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x + 1][current_y] == 7:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    else:
+                        fail = True
+                    #End If
+                elif apples_x[count] < current_x and apples_y[count] < current_y:
+                    if current_x == apples_x[count] and current_y - 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x - 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x == apples_x[count] and current_y + 1 == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif current_x + 1 == apples_x[count] and current_y == apples_y[count]:
+                        apples_x[count] = 400
+                        apples_y[count] = 400
+                        found = True
+                    elif map[current_x][current_y - 1] == 0 or map[current_x][current_y - 1] == 3 or map[current_x][current_y - 1] == 6:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x - 1][current_y] == 0 or map[current_x - 1][current_y] == 3 or map[current_x - 1][current_y] == 6:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 0 or map[current_x][current_y + 1] == 3 or map[current_x][current_y + 1] == 6:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x + 1][current_y] == 0 or map[current_x + 1][current_y] == 3 or map[current_x + 1][current_y] == 6:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7 and not (current_x == last_x and current_y - 1 == last_y):
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x - 1][current_y] == 7 and not (current_x - 1 == last_x and current_y == last_y):
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7 and not (current_x == last_x and current_y + 1 == last_y):
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x + 1][current_y] == 7 and not (current_x + 1 == last_x and current_y == last_y):
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    elif map[current_x][current_y - 1] == 7:
+                        current_y = current_y - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y + 1
+                    elif map[current_x - 1][current_y] == 7:
+                        current_x = current_x - 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x + 1
+                        last_y = current_y
+                    elif map[current_x][current_y + 1] == 7:
+                        current_y = current_y + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x
+                        last_y = current_y - 1
+                    elif map[current_x + 1][current_y] == 7:
+                        current_x = current_x + 1
+                        map[current_x][current_y] = 7
+                        last_x = current_x - 1
+                        last_y = current_y
+                    else:
+                        fail = True
+                    #End If
+            #End If
+            counter = counter + 1
+            if counter == 1000000 and found == False:
+                fail = True
+            #End If
+            #selector_left.rect.y = (current_y * 40)
+            #selector_right.rect.y = (current_y * 40)
+            #selector_top.rect.y = (current_y * 40)
+            #selector_bottom.rect.y = (current_y * 40) + 40
+            #selector_left.rect.x = (current_x * 40)
+            #selector_right.rect.x = (current_x * 40) + 40
+            #selector_top.rect.x = (current_x * 40)
+            #selector_bottom.rect.x = (current_x * 40)
+            #screen.fill(WHITE)
+            #draw_sprites_group.draw(screen)
+            #selector_sprites_group.draw(screen)
+            # -- Draw here
+            # -- flip display to reveal new position of objects
+            #pygame.display.flip()
+            # - The clock ticks over
+            #clock.tick(60)
+        #End While
+    #Next
+    valid = True
+    for i in range(len(apples_x)):
+        if apples_x[i] != 400:
+            valid = False
+        #End If
+    #Next
+    return valid
 #End Function
 while my_game == True:
     map = [[0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0],]
+    dummy_map = [[0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0],
@@ -666,6 +1778,7 @@ while my_game == True:
     all_level_mapping = False
     all_level_game = False
     apple_there = False
+    is_player_there = False
     total_score = 0
     score = 0
     level_demo = random.randint(1, 10)
@@ -909,17 +2022,47 @@ while my_game == True:
                     all_sprites_group.add(monster)
                     map[selector_top.pos_x][selector_top.pos_y] = 6
                 if event.key == pygame.K_RETURN:
+                    dummy_map = copy.deepcopy(map)
                     if is_player_there == False:
-                        map_draw = False
                         no_player = True
                     elif apple_there == False:
-                        map_draw = False
                         no_apples = True
+                    elif Check(dummy_map) == False:
+                        invalid_map = True
                     else:
                         map_draw = False
                         mapping = True
                 #End If
         #Next event
+        while invalid_map == True:
+            # -- User input and controls
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    invalid_map = False
+                    my_game = False
+                    endgame = True
+                elif event.type == pygame.KEYDOWN: # - a key is down
+                    if event.key == pygame.K_RETURN:
+                        invalid_map = False
+                    if event.key == pygame.K_ESCAPE:
+                        invalid_map = False
+                        map_draw = False
+                        my_game = False
+                        endgame = True
+                #End If
+            #Next event
+            screen.fill(BLACK)
+            pygame.draw.rect(screen, BLACK, (640, 0, 360, 480))
+            font = pygame.font.SysFont('ComicSans', 100, True, False)
+            text = font.render('Invalid Map!', True, WHITE)
+            screen.blit(text, [205, 70])
+            font = pygame.font.SysFont('ComicSans', 30, True, False)
+            text = font.render('Press enter to map drawing', True, WHITE)
+            screen.blit(text, [310, 330])
+            text = font.render('Press escape to quit', True, WHITE)
+            screen.blit(text, [360, 360])
+            # -- flip display to reveal new position of objects
+            pygame.display.flip()
         while no_player == True:
             # -- User input and controls
             for event in pygame.event.get():
@@ -930,11 +2073,10 @@ while my_game == True:
                 elif event.type == pygame.KEYDOWN: # - a key is down
                     if event.key == pygame.K_RETURN:
                         is_player_there = False
-                        apple_there = False
                         no_player = False
-                        map_draw = True
                     if event.key == pygame.K_ESCAPE:
                         no_player = False
+                        map_draw = False
                         my_game = False
                         endgame = True
                 #End If
@@ -951,8 +2093,6 @@ while my_game == True:
             screen.blit(text, [360, 360])
             # -- flip display to reveal new position of objects
             pygame.display.flip()
-            # - The clock ticks over
-            clock.tick(60)
         while no_apples == True:
             # -- User input and controls
             for event in pygame.event.get():
@@ -962,12 +2102,11 @@ while my_game == True:
                     endgame = True
                 elif event.type == pygame.KEYDOWN: # - a key is down
                     if event.key == pygame.K_RETURN:
-                        is_player_there = False
                         apple_there = False
                         no_apples = False
-                        map_draw = True
                     if event.key == pygame.K_ESCAPE:
                         no_apples = False
+                        map_draw = False
                         my_game = False
                         endgame = True
                 #End If
@@ -985,7 +2124,6 @@ while my_game == True:
             # -- flip display to reveal new position of objects
             pygame.display.flip()
             # - The clock ticks over
-            clock.tick(60)
         # -- Game logic goes after this comment
         # -- Screen background is BLACK
         screen.fill (WHITE)

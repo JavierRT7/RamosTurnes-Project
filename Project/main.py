@@ -144,6 +144,7 @@ class Monster(pygame.sprite.Sprite):
             self.speed_x = random.randint(-2, 2)
             self.speed_y = random.randint(-2, 2)
         #Next
+        # Act on edge of screen collisions
         if self.rect.x > 610:
             self.speed_x = 0
             self.speed_y = 0
@@ -151,8 +152,7 @@ class Monster(pygame.sprite.Sprite):
             self.rect.y = self.old_y
             self.speed_x = random.randint(-3, 3)
             self.speed_y = random.randint(-3, 3)
-        #Next
-        # Act on edge of screen collisions
+        #End If
         if self.rect.x < 0:
             self.speed_x = 0
             self.speed_y = 0

@@ -1,7 +1,7 @@
 import pygame
 import random
 import copy
-#hello new computer
+
 # -- Colours
 BLACK = (0,0,0)
 WHITE = (255,255,255)
